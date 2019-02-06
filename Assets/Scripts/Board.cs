@@ -751,14 +751,25 @@ public class Board : MonoBehaviour {
 
     List<GamePiece> GetComboPieces (List<Bomb> combo, int targetX, int targetY) {
         List<GamePiece> toClear = new List<GamePiece>();
+        List<BombType> fired = new List<BombType>();
 
         foreach (Bomb piece in combo) {
             switch(piece.bombType) {
                 case BombType.Column:
-                    toClear = toClear.Union(GetColumnPieces(targetX)).ToList();
+                    if (fired.IndexOf(piece.bombType) >= 0) {
+                        toClear = toClear.Union(GetRowPieces(targetY)).ToList();
+                    } else {
+                        toClear = toClear.Union(GetColumnPieces(targetX)).ToList();
+                        fired.Add(piece.bombType);
+                    }
                     break;
                 case BombType.Row:
-                    toClear = toClear.Union(GetRowPieces(targetY)).ToList();
+                    if (fired.IndexOf(piece.bombType) >= 0) {
+                        toClear = toClear.Union(GetColumnPieces(targetX)).ToList();
+                    } else {
+                        toClear = toClear.Union(GetRowPieces(targetY)).ToList();
+                        fired.Add(piece.bombType);
+                    }
                     break;
                 case BombType.Adjacent:
                     toClear = toClear.Union(GetAdjacentPieces(targetX, targetY)).ToList();
