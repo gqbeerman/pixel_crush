@@ -292,17 +292,22 @@ public class Board : MonoBehaviour {
                 if (IsColorBomb(clickedPiece) && !IsColorBomb(targetPiece)) {
                     clickedPiece.matchValue = targetPiece.matchValue;
                     colorMatches = FindAllMatchValue(clickedPiece.matchValue);
-                    //match regular piece to rainbow piec
+                //match regular piece to rainbow piec
                 } else if (!IsColorBomb(clickedPiece) && IsColorBomb(targetPiece)) {
                     targetPiece.matchValue = clickedPiece.matchValue;
                     colorMatches = FindAllMatchValue(targetPiece.matchValue);
-                    //match rainbow to rainbow
+                //match rainbow to rainbow
                 } else if (IsColorBomb(clickedPiece) && IsColorBomb(targetPiece)) {
                     foreach (GamePiece piece in m_allGamePieces) {
                         if (!colorMatches.Contains(piece)) {
                             colorMatches.Add(piece);
                         }
                     }
+                // match powerup to powerup
+                } else if (clickedPiece is Bomb && targetPiece is Bomb) {
+                    List<Bomb> combo = new List<Bomb>(){clickedPiece as Bomb, targetPiece as Bomb};
+                    colorMatches = GetComboPieces(combo, targetTile.xIndex, targetTile.yIndex);
+                    
                 }
 
                 //block move from happening if there is no match and not a rainbow piece
@@ -742,6 +747,25 @@ public class Board : MonoBehaviour {
             }
         }
         return gamePieces;
+    }
+
+    List<GamePiece> GetComboPieces (List<Bomb> combo, int targetX, int targetY) {
+        List<GamePiece> toClear = new List<GamePiece>();
+
+        foreach (Bomb piece in combo) {
+            switch(piece.bombType) {
+                case BombType.Column:
+                    toClear = toClear.Union(GetColumnPieces(targetX)).ToList();
+                    break;
+                case BombType.Row:
+                    toClear = toClear.Union(GetRowPieces(targetY)).ToList();
+                    break;
+                case BombType.Adjacent:
+                    toClear = toClear.Union(GetAdjacentPieces(targetX, targetY)).ToList();
+                    break;
+            }
+        }
+        return toClear;
     }
 
     List<GamePiece> GetBombedPieces(List<GamePiece> gamePieces) {

@@ -1252,7 +1252,17 @@ MonoBehaviour:
     x: 6
     y: 4
     z: 0
-  startingGamePieces: []
+  startingGamePieces:
+  - prefab: {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771,
+      type: 3}
+    x: 1
+    y: 1
+    z: 0
+  - prefab: {fileID: 6135440822068689972, guid: 16b6480910fda4f7c8f5c57649c985e3,
+      type: 3}
+    x: 1
+    y: 2
+    z: 0
 --- !u!4 &1521621293
 Transform:
   m_ObjectHideFlags: 0
