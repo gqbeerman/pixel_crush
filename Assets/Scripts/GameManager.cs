@@ -100,11 +100,21 @@ public class GameManager : Singleton<GameManager> {
                 messageWindow.GetComponent<RectXFormMover>().MoveOn();
                 messageWindow.ShowMessage(winIcon, "YOU WIN!", "OK");
             }
+
+            //play win sound
+            if(SoundManager.Instance != null) {
+                SoundManager.Instance.PlayWinSound();
+            }
         } else {
             //Debug.Log("YOU LOSE");
             if (messageWindow != null) {
                 messageWindow.GetComponent<RectXFormMover>().MoveOn();
                 messageWindow.ShowMessage(loseIcon, "YOU LOSE!", "OK");
+            }
+
+            //play lose sound
+            if (SoundManager.Instance != null) {
+                SoundManager.Instance.PlayLoseSound();
             }
         }
 
