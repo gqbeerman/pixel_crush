@@ -192,10 +192,10 @@ public class Board : MonoBehaviour {
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
                 if(m_allGamePieces[i, j] == null && m_allTiles[i, j].tileType != TileType.Obstacle) {
-                    GamePiece piece = null; 
+                    //GamePiece piece = null; 
 
                     if(j == height - 1 && CanAddCollectible()) {
-                        piece = FillRandomCollectibleAt(i, j, falseYOffset, moveTime);
+                        FillRandomCollectibleAt(i, j, falseYOffset, moveTime);
                         collectibleCount++;
                     } else {
                         FillRandomGamePieceAt(i, j, falseYOffset, moveTime);
@@ -203,7 +203,7 @@ public class Board : MonoBehaviour {
 
                         while (HasMatchOnFill(i, j)) {
                             ClearPieceAt(i, j);
-                            piece = FillRandomGamePieceAt(i, j, falseYOffset, moveTime);
+                            FillRandomGamePieceAt(i, j, falseYOffset, moveTime);
                             iterations++;
 
                             if (iterations >= maxIterations) {
@@ -599,6 +599,15 @@ public class Board : MonoBehaviour {
         return movingPieces;
     }
 
+    List<GamePiece> StartCollapse(List<int> columnsToCOllapse) {
+        List<GamePiece> movingPieces = new List<GamePiece>();
+        foreach(int column in columnsToCOllapse) {
+            movingPieces = movingPieces.Union(CollapseColumn(column)).ToList();
+        }
+        return movingPieces;
+
+    }
+
     List<int> GetColumns(List<GamePiece> gamePieces) {
         List<int> columns = new List<int>();
         foreach(GamePiece piece in gamePieces) {
@@ -656,14 +665,21 @@ public class Board : MonoBehaviour {
             bombedPieces = GetBombedPieces(gamePieces);
             gamePieces = gamePieces.Union(bombedPieces).ToList();
 
-            //collectible collection
+            //collectible pieces that have hit the bottom of the board
             List<GamePiece> collectedPieces = FindCollectiblesAt(0, true);
+
+            //find blockers destroyed by bombs
             List<GamePiece> allCollectibles = FindAllCollectibles();
             List<GamePiece> blockers = gamePieces.Intersect(allCollectibles).ToList();
+            //add blockers to list of collected pieces
             collectedPieces = collectedPieces.Union(blockers).ToList();
-
+            //decrement cleared collectibles/blockers
             collectibleCount -= collectedPieces.Count;
+            //add these collectibles to the list of game pieces to clear
             gamePieces = gamePieces.Union(collectedPieces).ToList();
+
+            //fix for null reference error in GetColumns
+            List<int> columnsToCollapse = GetColumns(gamePieces);
 
             ClearPiecseAt(gamePieces, bombedPieces);
             BreakTilesAt(gamePieces);
@@ -678,12 +694,12 @@ public class Board : MonoBehaviour {
                 m_targetTileBomb = null;
             }
 
-            yield return new WaitForSeconds(0.2f);
-            movingPieces = StartCollapse(gamePieces);
+            yield return new WaitForSeconds(0.25f);
+            movingPieces = StartCollapse(columnsToCollapse);
             while (!FinishedCollapsing(movingPieces)) {
                 yield return null;              // wait to respawn
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
 
             //check for extra matches as result of collapse
             matches = FindMatchesWith(movingPieces);
