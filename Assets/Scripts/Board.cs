@@ -446,13 +446,15 @@ public class Board : MonoBehaviour {
         return combinedMatches;
     }
 
-    List<GamePiece> FindMatchesAt(List<GamePiece> gamePieces, int minLength = 3) {
-        List<GamePiece> matches = new List<GamePiece>();
+    List<GamePiece> FindMatchesWith(List<GamePiece> gamePieces, int minLength = 3) {
+        List<GamePiece> totalMatches = new List<GamePiece>();
 
         foreach(GamePiece piece in gamePieces) {
-            matches = matches.Union(FindMatchesAt(piece.xIndex, piece.yIndex, minLength)).ToList();
+            List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength);
+
+            totalMatches = totalMatches.Union(matched).ToList();
         }
-        return matches;
+        return totalMatches;
     }
 
     List<GamePiece> FindAllMatches() {
@@ -525,7 +527,7 @@ public class Board : MonoBehaviour {
         }
     }
 
-    void ClearPieceAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
+    void ClearPiecseAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
                 ClearPieceAt(piece.xIndex, piece.yIndex);
@@ -556,7 +558,7 @@ public class Board : MonoBehaviour {
         }
     }
 
-    void BreakTileAt(List<GamePiece> gamePieces) {
+    void BreakTilesAt(List<GamePiece> gamePieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
                 BreakTileAt(piece.xIndex, piece.yIndex);
@@ -587,7 +589,8 @@ public class Board : MonoBehaviour {
         return movingPieces;
     }
 
-    List<GamePiece> CollapseColumn(List<GamePiece> gamePieces) {
+    // OLD: CollapseColumn
+    List<GamePiece> StartCollapse(List<GamePiece> gamePieces) {
         List<GamePiece> movingPieces = new List<GamePiece>();
         List<int> columnsToCollapse = GetColumns(gamePieces);
         foreach(int column in columnsToCollapse) {
@@ -662,8 +665,8 @@ public class Board : MonoBehaviour {
             collectibleCount -= collectedPieces.Count;
             gamePieces = gamePieces.Union(collectedPieces).ToList();
 
-            ClearPieceAt(gamePieces, bombedPieces);
-            BreakTileAt(gamePieces);
+            ClearPiecseAt(gamePieces, bombedPieces);
+            BreakTilesAt(gamePieces);
 
             //add bomb to collapsing pieces
             if(m_clickedTileBomb != null) {
@@ -676,14 +679,14 @@ public class Board : MonoBehaviour {
             }
 
             yield return new WaitForSeconds(0.2f);
-            movingPieces = CollapseColumn(gamePieces);
-            while (!IsCollapsed(movingPieces)) {
-                yield return null;
+            movingPieces = StartCollapse(gamePieces);
+            while (!FinishedCollapsing(movingPieces)) {
+                yield return null;              // wait to respawn
             }
             yield return new WaitForSeconds(0.1f);
 
             //check for extra matches as result of collapse
-            matches = FindMatchesAt(movingPieces);
+            matches = FindMatchesWith(movingPieces);
 
             collectedPieces = FindCollectiblesAt(0, true);
             matches = matches.Union(collectedPieces).ToList();
@@ -702,7 +705,8 @@ public class Board : MonoBehaviour {
         yield return null;
     }
 
-    bool IsCollapsed(List<GamePiece> gamePieces) {
+    // OLD: IsCollapsed
+    bool FinishedCollapsing(List<GamePiece> gamePieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
                 if(piece.transform.position.y - (float)piece.yIndex > 0.001f) {
