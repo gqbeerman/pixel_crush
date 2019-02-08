@@ -16,7 +16,9 @@ public class GameManager : Singleton<GameManager> {
     Board m_board;
 
     bool m_isReadyToBegin = false;
-    bool m_isGameOver = false;
+
+    public bool IsGameOver { get; set; } = false;
+
     bool m_isWinner = false;
     bool m_isReadyToReload = false;
 
@@ -51,6 +53,9 @@ public class GameManager : Singleton<GameManager> {
     IEnumerator ExecuteGameLoop() {
         yield return StartCoroutine("StartGameRoutine");
         yield return StartCoroutine("PlayGameRoutine");
+
+        //wait for board to refill before ending
+        yield return StartCoroutine("WaitForBoardRoutine", 0.5f);
         yield return StartCoroutine("EndGameRoutine");
     }
 
@@ -76,19 +81,31 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator PlayGameRoutine() {
-        while (!m_isGameOver) {
+        while (!IsGameOver) {
             if(ScoreManager.Instance != null) {
                 if(ScoreManager.Instance.CurrentScore >= scoreGoal) {
-                    m_isGameOver = true;
+                    IsGameOver = true;
                     m_isWinner = true;
                 }
             }
             if (movesLeft <= 0) {
-                m_isGameOver = true;
+                IsGameOver = true;
                 m_isWinner = false;
             }
             yield return null;
         }
+    }
+
+    IEnumerator WaitForBoardRoutine(float delay = 0f) {
+        if(m_board != null) {
+            //wait for board class swap time
+            yield return new WaitForSeconds(m_board.swapTime);
+
+            while (m_board.isRefilling) {
+                yield return null;
+            }
+        }
+        yield return new WaitForSeconds(delay);
     }
 
     IEnumerator EndGameRoutine() {

@@ -569,7 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9196cda8a2ab64b50a9ba1277e0bb04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movesLeft: 28
+  movesLeft: 2
   scoreGoal: 150000
   screenFader: {fileID: 664863046}
   levelNameText: {fileID: 151910100}
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eebd2057bb8704b37975de636780ccc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 8
+  width: 9
   height: 9
   borderSize: 1
   tileNormalPrefab: {fileID: 2962135267856225675, guid: 08d5fdd93d3ad49d697590b77013883b,
@@ -1263,6 +1263,7 @@ MonoBehaviour:
     x: 1
     y: 2
     z: 0
+  isRefilling: 0
 --- !u!4 &1521621293
 Transform:
   m_ObjectHideFlags: 0

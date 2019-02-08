@@ -35,7 +35,7 @@ public class Board : MonoBehaviour {
     GameObject m_targetTileBomb;
 
     [Header("Misc Values")]
-    public float swapTime = 0.5f;
+    public float swapTime = 0.25f;
     public int fillYOffset = 10;
     public float fillMoveTime = 0.5f;
 
@@ -54,6 +54,8 @@ public class Board : MonoBehaviour {
     ParticleManager m_particleManager;
 
     int m_scoreMultiplier = 0;
+
+    public bool isRefilling = false;
 
     [System.Serializable]
     public class StartingObject {
@@ -274,7 +276,7 @@ public class Board : MonoBehaviour {
     }
 
     IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile) {
-        if (m_playerInputEnabled) {
+        if (m_playerInputEnabled && !GameManager.Instance.IsGameOver) {
             GamePiece clickedPiece = m_allGamePieces[clickedTile.xIndex, clickedTile.yIndex];
             GamePiece targetPiece = m_allGamePieces[targetTile.xIndex, targetTile.yIndex];
 
@@ -624,6 +626,8 @@ public class Board : MonoBehaviour {
 
     IEnumerator ClearAndRefillBoardRoutine(List<GamePiece> gamePieces) {
         m_playerInputEnabled = false;
+        isRefilling = true;
+
         List<GamePiece> matches = gamePieces;
         //score multiplier
         m_scoreMultiplier = 0;
@@ -641,6 +645,7 @@ public class Board : MonoBehaviour {
         } while (matches.Count != 0);
 
         m_playerInputEnabled = true;
+        isRefilling = false;
     }
 
     IEnumerator RefillRoutine() {
@@ -649,6 +654,9 @@ public class Board : MonoBehaviour {
     }
 
     IEnumerator ClearAndCollapseRoutine(List<GamePiece> gamePieces) {
+        //need to create bombs during collapse in this section
+        //check the entire board for matches call DropBomb method
+
         List<GamePiece> movingPieces = new List<GamePiece>();
         List<GamePiece> matches = new List<GamePiece>();
 
