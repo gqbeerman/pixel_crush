@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 public class BoardDeadlock : MonoBehaviour {
+
     List<GamePiece> GetRowOrColumnList(GamePiece[,] allPieces, int x, int y, int listLength = 3, bool checkRow = true) {
         int width = allPieces.GetLength(0);
         int height = allPieces.GetLength(1);
@@ -11,11 +12,11 @@ public class BoardDeadlock : MonoBehaviour {
         List<GamePiece> piecesList = new List<GamePiece>();
         for (int i = 0; i < listLength; i++) {
             if (checkRow) {
-                if (x + i < width && y < height) { //&& x > 0 && y > 0) {
+                if (x + i < width && y < height && allPieces[x + i, y] != null) { //&& x > 0 && y > 0) {
                     piecesList.Add(allPieces[x + i, y]);
                 }
             } else {
-                if (x < width && y + i < height) {
+                if (x < width && y + i < height && allPieces[x, y + i] != null) {
                     piecesList.Add(allPieces[x, y + i]);
                 }
             }
@@ -83,9 +84,9 @@ public class BoardDeadlock : MonoBehaviour {
             }
 
             if (matches.Count >= listLength) {
-                string rowColumnStr = (checkRow) ? " row " : " column ";
-                Debug.Log("===== Available Move =====");
-                Debug.Log("Move " + matches[0].matchValue + " piece to " + unmatchedPiece.xIndex + ", " + unmatchedPiece.yIndex + " to form matching " + rowColumnStr);
+                //string rowColumnStr = (checkRow) ? " row " : " column ";
+                //Debug.Log("===== Available Move =====");
+                //Debug.Log("Move " + matches[0].matchValue + " piece to " + unmatchedPiece.xIndex + ", " + unmatchedPiece.yIndex + " to form matching " + rowColumnStr);
                 return true;
             }
         }

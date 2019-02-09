@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 [RequireComponent(typeof(BoardDeadlock))]
+[RequireComponent(typeof(BoardShuffler))]
 public class Board : MonoBehaviour {
     [Header("Board Attributes")]
     public int width;
@@ -59,6 +60,7 @@ public class Board : MonoBehaviour {
     public bool isRefilling = false;
 
     BoardDeadlock m_boardDeadlock;
+    BoardShuffler m_boardShuffler;
 
     [System.Serializable]
     public class StartingObject {
@@ -74,6 +76,7 @@ public class Board : MonoBehaviour {
         m_allGamePieces = new GamePiece[width, height];
         m_particleManager = GameObject.FindWithTag("Particle Manager").GetComponent<ParticleManager>();
         m_boardDeadlock = GetComponent<BoardDeadlock>();
+        m_boardShuffler = GetComponent<BoardShuffler>();
     }
 
     public void SetupBoard() {
@@ -190,6 +193,31 @@ public class Board : MonoBehaviour {
 
     bool IsWithinBounds(int x, int y) {
         return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    void FillBoardFromList(List<GamePiece> gamePieces) {
+        Queue<GamePiece> unusedPieces = new Queue<GamePiece>(gamePieces);
+
+        int maxIterations = 100;
+        int iterations = 0;
+
+        for(int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if(m_allGamePieces[i, j] == null && m_allTiles[i, j].tileType != TileType.Obstacle) {
+                    m_allGamePieces[i, j] = unusedPieces.Dequeue();
+                    iterations = 0;
+                    while(HasMatchOnFill(i, j)) {
+                        unusedPieces.Enqueue(m_allGamePieces[i, j]);
+
+                        m_allGamePieces[i, j] = unusedPieces.Dequeue();
+                        iterations++;
+                        if(iterations > maxIterations) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void FillBoard(int falseYOffset = 0, float moveTime = 0.2f) {
@@ -529,6 +557,9 @@ public class Board : MonoBehaviour {
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
                 ClearPieceAt(i, j);
+                if(m_particleManager != null) {
+                    m_particleManager.ClearPieceFXAt(i, j);
+                }
             }
         }
     }
@@ -637,18 +668,32 @@ public class Board : MonoBehaviour {
         m_scoreMultiplier = 0;
 
         do {
+            //increment score multiplier by 1 for each recursive call of clearandcollapse
             m_scoreMultiplier++;
 
             yield return StartCoroutine(ClearAndCollapseRoutine(matches));
             yield return null;
 
+            //callback to refill the board
             yield return StartCoroutine(RefillRoutine());
+            //find any matches and repeat
             matches = FindAllMatches();
 
             yield return new WaitForSeconds(0.2f);
-        } while (matches.Count != 0);
+        } while (matches.Count != 0); //while list of matches still has gamepieces in it
+        //deadlock check
+        if(m_boardDeadlock.IsDeadlocked(m_allGamePieces, 3)) {
+            yield return new WaitForSeconds(1f);
+            //ClearBoard();
+            StartCoroutine(ShuffleBoardRoutine());
+            yield return new WaitForSeconds(1f);
+            //could be bad, no subsequent checks for deadlock
+            yield return StartCoroutine(RefillRoutine());
+        }
 
+        //enable player input
         m_playerInputEnabled = true;
+        //refilling is done
         isRefilling = false;
     }
 
@@ -737,7 +782,10 @@ public class Board : MonoBehaviour {
     bool FinishedCollapsing(List<GamePiece> gamePieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
-                if(piece.transform.position.y - (float)piece.yIndex > 0.001f) {
+                if(piece.transform.position.x - (float)piece.xIndex > 0.001f) {
+                    return false;
+                }
+                if (piece.transform.position.y - (float)piece.yIndex > 0.001f) {
                     return false;
                 }
             }
@@ -979,5 +1027,32 @@ public class Board : MonoBehaviour {
 
     public void TestDeadLock() {
         m_boardDeadlock.IsDeadlocked(m_allGamePieces, 3);
+    }
+
+    public void ShuffleBoard() {
+        if (m_playerInputEnabled) {
+            StartCoroutine(ShuffleBoardRoutine());
+        }
+    }
+
+    IEnumerator ShuffleBoardRoutine() {
+        List<GamePiece> allPieces = new List<GamePiece>();
+        foreach(GamePiece piece in m_allGamePieces) {
+            allPieces.Add(piece);
+        }
+
+        while (!FinishedCollapsing(allPieces)){
+            yield return null;
+        }
+
+        List<GamePiece> normalPieces = m_boardShuffler.RemoveNormalPieces(m_allGamePieces);
+
+        m_boardShuffler.ShuffleList(normalPieces);
+        FillBoardFromList(normalPieces);
+        m_boardShuffler.MovePieces(m_allGamePieces, swapTime);
+
+        //try not to create match on shuffle
+        List<GamePiece> matches = FindAllMatches();
+        StartCoroutine(ClearAndRefillBoardRoutine(matches));
     }
 }
