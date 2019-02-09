@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(BoardDeadlock))]
 public class Board : MonoBehaviour {
     [Header("Board Attributes")]
     public int width;
@@ -57,6 +58,8 @@ public class Board : MonoBehaviour {
 
     public bool isRefilling = false;
 
+    BoardDeadlock m_boardDeadlock;
+
     [System.Serializable]
     public class StartingObject {
         public GameObject prefab;
@@ -70,6 +73,7 @@ public class Board : MonoBehaviour {
         m_allTiles = new Tile[width, height];
         m_allGamePieces = new GamePiece[width, height];
         m_particleManager = GameObject.FindWithTag("Particle Manager").GetComponent<ParticleManager>();
+        m_boardDeadlock = GetComponent<BoardDeadlock>();
     }
 
     public void SetupBoard() {
@@ -971,5 +975,9 @@ public class Board : MonoBehaviour {
             }
         }
         return bombedPieces.Except(piecesToRemove).ToList();
+    }
+
+    public void TestDeadLock() {
+        m_boardDeadlock.IsDeadlocked(m_allGamePieces, 3);
     }
 }
