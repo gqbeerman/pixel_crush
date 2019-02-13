@@ -36,6 +36,8 @@ public class Board : MonoBehaviour {
     GameObject m_clickedTileBomb;
     GameObject m_targetTileBomb;
 
+    List<GameObject> spawnedPieces;
+
     [Header("Misc Values")]
     public float swapTime = 0.25f;
     public int fillYOffset = 10;
@@ -85,6 +87,7 @@ public class Board : MonoBehaviour {
 
         List<GamePiece> startingCollectibles = FindAllCollectibles();
         collectibleCount = startingCollectibles.Count;
+        spawnedPieces = new List<GameObject>();
 
         SetupCamera();
         FillBoard(fillYOffset, fillMoveTime);
@@ -114,12 +117,16 @@ public class Board : MonoBehaviour {
         }
     }
 
-    GameObject MakeBomb(GameObject prefab, int x, int y) {
+    GameObject MakeBomb(GameObject prefab, int x, int y, bool copyColor) {
         if(prefab != null && IsWithinBounds(x, y)) {
             GameObject bomb = Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
             bomb.GetComponent<Bomb>().Init(this);
             bomb.GetComponent<Bomb>().SetCoord(x, y);
             bomb.transform.parent = transform;
+            if (copyColor) {
+                bomb.GetComponent<Bomb>().ChangeColor(m_allGamePieces[x,y]);
+            }
+
             return bomb;
         }
         return null;
@@ -358,23 +365,7 @@ public class Board : MonoBehaviour {
 
                     //get direction and placement of bomb during swap
                     Vector2 swipeDirection = new Vector2(targetTile.xIndex - clickedTile.xIndex, targetTile.yIndex - clickedTile.yIndex);
-                    m_clickedTileBomb = DropBomb(clickedTile.xIndex, clickedTile.yIndex, swipeDirection, clickePieceMatches);
-                    m_targetTileBomb = DropBomb(targetTile.xIndex, targetTile.yIndex, swipeDirection, targetPieceMatches);
 
-                    if (m_clickedTileBomb != null && targetPiece != null) {
-
-                        GamePiece clickedBombPiece = m_clickedTileBomb.GetComponent<GamePiece>();
-                        if (!IsColorBomb(clickedBombPiece)) {
-                            clickedBombPiece.ChangeColor(targetPiece);
-                        }
-                    }
-                    if (m_targetTileBomb != null && clickedPiece != null) {
-
-                        GamePiece targetBombPiece = m_targetTileBomb.GetComponent<GamePiece>();
-                        if (!IsColorBomb(targetBombPiece)) {
-                            targetBombPiece.ChangeColor(clickedPiece);
-                        }
-                    }
                     ClearAndRefillBoard(clickePieceMatches.Union(targetPieceMatches).ToList().Union(colorMatches).ToList());
                 }
             }
@@ -469,25 +460,41 @@ public class Board : MonoBehaviour {
     List<GamePiece> FindMatchesAt(int x, int y, int minLength = 3) {
         List<GamePiece> horizMatches = FindHorizontalMatches(x, y, minLength);
         List<GamePiece> vertMatches = FindVerticalMatches(x, y, minLength);
-
+        
         if (horizMatches == null) {
             horizMatches = new List<GamePiece>();
         }
         if (vertMatches == null) {
             vertMatches = new List<GamePiece>();
         }
-        var combinedMatches = horizMatches.Union(vertMatches).ToList();
+
+        Vector3 falseSwipe = Vector2.zero;
+        if (horizMatches.Count > 3) {
+            falseSwipe.y = 1;
+        }
+        if (vertMatches.Count > 3) {
+            falseSwipe.x = 1;
+        }
+        
+        List<GamePiece> combinedMatches = horizMatches.Union(vertMatches).ToList();
+        if (combinedMatches.Count > minLength) {
+            DropBomb(x, y, falseSwipe, combinedMatches);
+        }
         return combinedMatches;
     }
 
     List<GamePiece> FindMatchesWith(List<GamePiece> gamePieces, int minLength = 3) {
         List<GamePiece> totalMatches = new List<GamePiece>();
 
-        foreach(GamePiece piece in gamePieces) {
-            List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength);
+        while (gamePieces.Count > 0) {
+            GamePiece piece = gamePieces[0];
+            gamePieces.RemoveAt(0);
 
+            List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength);
+            gamePieces.RemoveAll(item => matched.IndexOf(item) >= 0);
             totalMatches = totalMatches.Union(matched).ToList();
         }
+
         return totalMatches;
     }
 
@@ -741,16 +748,11 @@ public class Board : MonoBehaviour {
             ClearPiecseAt(gamePieces, bombedPieces);
             BreakTilesAt(gamePieces);
 
-            //add bomb to collapsing pieces
-            if(m_clickedTileBomb != null) {
-                ActivateBomb(m_clickedTileBomb);
-                m_clickedTileBomb = null;
+            for (int i = 0; i < spawnedPieces.Count; i++) {
+                ActivateBomb(spawnedPieces[i]);
             }
-            if(m_targetTileBomb != null) {
-                ActivateBomb(m_targetTileBomb);
-                m_targetTileBomb = null;
-            }
-
+            spawnedPieces.Clear();
+            
             yield return new WaitForSeconds(0.25f);
             movingPieces = StartCollapse(columnsToCollapse);
             while (!FinishedCollapsing(movingPieces)) {
@@ -922,25 +924,29 @@ public class Board : MonoBehaviour {
         if(gamePieces.Count >= 4) {
             if (IsCornerMatch(gamePieces)) {
                 if(adjacentBombPrefab != null) {
-                    bomb = MakeBomb(adjacentBombPrefab, x, y);
+                    bomb = MakeBomb(adjacentBombPrefab, x, y, true);
                 }
             } else {
                 if(gamePieces.Count >= 5) {
                     if(columnBombPrefab != null) {
-                        bomb = MakeBomb(ColorBomPrefab, x, y);
+                        bomb = MakeBomb(ColorBomPrefab, x, y, false);
                     }
                 } else {
                     if (swapDirection.x != 0) {
                         if (rowBombPrefab != null) {
-                            bomb = MakeBomb(rowBombPrefab, x, y);
+                            bomb = MakeBomb(rowBombPrefab, x, y, true);
                         }
                     } else {
                         if (columnBombPrefab != null) {
-                            bomb = MakeBomb(columnBombPrefab, x, y);
+                            bomb = MakeBomb(columnBombPrefab, x, y, true);
                         }
                     }
                 }
             }
+        }
+        
+        if (bomb) {
+            spawnedPieces.Add(bomb);
         }
         return bomb;
     }
@@ -950,7 +956,11 @@ public class Board : MonoBehaviour {
         int y = (int)bomb.transform.position.y;
 
         if(IsWithinBounds(x, y)) {
-            m_allGamePieces[x, y] = bomb.GetComponent<GamePiece>();
+            if (m_allGamePieces[x,y] == null) {
+                m_allGamePieces[x, y] = bomb.GetComponent<GamePiece>();
+            } else {
+                Destroy(bomb);
+            }
         }
     }
 

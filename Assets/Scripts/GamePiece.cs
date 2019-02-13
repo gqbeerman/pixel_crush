@@ -112,7 +112,6 @@ public class GamePiece : MonoBehaviour {
 
     public void ChangeColor(GamePiece pieceToMatch) {
         SpriteRenderer rendererToChange = GetComponent<SpriteRenderer>();
-        Color colorToMatch = Color.clear;
 
         if(pieceToMatch != null) {
             SpriteRenderer renderToMatch = pieceToMatch.GetComponent<SpriteRenderer>();
@@ -121,7 +120,6 @@ public class GamePiece : MonoBehaviour {
             }
             matchValue = pieceToMatch.matchValue;
         }
-        //rendererToChange.color = colorToMatch;
     }
 
     public void ScorePoints(int multiplier = 1, int bonus = 0) {
