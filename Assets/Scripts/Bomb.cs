@@ -12,4 +12,5 @@ public enum BombType {
 
 public class Bomb : GamePiece {
     public BombType bombType;
+    public bool fired;
 }

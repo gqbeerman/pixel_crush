@@ -492,7 +492,7 @@ public class Board : MonoBehaviour {
 
             List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength);
             gamePieces.RemoveAll(item => matched.IndexOf(item) >= 0);
-            totalMatches = totalMatches.Union(matched).ToList();
+            totalMatches = totalMatches.Union(matched).ToList();    
         }
 
         return totalMatches;
@@ -857,6 +857,7 @@ public class Board : MonoBehaviour {
                     toClear = toClear.Union(GetAdjacentPieces(targetX, targetY)).ToList();
                     break;
             }
+            piece.fired = true;
         }
         return toClear;
     }
@@ -869,7 +870,7 @@ public class Board : MonoBehaviour {
                 List<GamePiece> piecesToClear = new List<GamePiece>();
                 Bomb bomb = piece.GetComponent<Bomb>();
 
-                if(bomb != null) {
+                if(bomb != null && !bomb.fired) {
                     switch (bomb.bombType) {
                         case BombType.Column:
                             piecesToClear = GetColumnPieces(bomb.xIndex);
@@ -884,6 +885,7 @@ public class Board : MonoBehaviour {
 
                             break;
                     }
+                    bomb.fired = true;
                     allPiecesToClear = allPiecesToClear.Union(piecesToClear).ToList();
                     allPiecesToClear = RemoveCollectibles(allPiecesToClear);
                 }
