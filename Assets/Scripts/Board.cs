@@ -325,8 +325,8 @@ public class Board : MonoBehaviour {
 
                 yield return new WaitForSeconds(swapTime);
 
-                List<GamePiece> clickePieceMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
-                List<GamePiece> targetPieceMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
+                List<GamePiece> clickePieceMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex, 3, true);
+                List<GamePiece> targetPieceMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex, 3, true);
                 List<GamePiece> colorMatches = new List<GamePiece>();
 
                 //matching rainbow to regular color
@@ -457,7 +457,7 @@ public class Board : MonoBehaviour {
 
     }
 
-    List<GamePiece> FindMatchesAt(int x, int y, int minLength = 3) {
+    List<GamePiece> FindMatchesAt(int x, int y, int minLength = 3, bool spawnBombs = false) {
         List<GamePiece> horizMatches = FindHorizontalMatches(x, y, minLength);
         List<GamePiece> vertMatches = FindVerticalMatches(x, y, minLength);
         
@@ -467,18 +467,20 @@ public class Board : MonoBehaviour {
         if (vertMatches == null) {
             vertMatches = new List<GamePiece>();
         }
-
-        Vector3 falseSwipe = Vector2.zero;
-        if (horizMatches.Count > 3) {
-            falseSwipe.y = 1;
-        }
-        if (vertMatches.Count > 3) {
-            falseSwipe.x = 1;
-        }
-        
         List<GamePiece> combinedMatches = horizMatches.Union(vertMatches).ToList();
-        if (combinedMatches.Count > minLength) {
-            DropBomb(x, y, falseSwipe, combinedMatches);
+
+        if (spawnBombs) {
+            Vector3 falseSwipe = Vector2.zero;
+            if (horizMatches.Count > 3) {
+                falseSwipe.y = 1;
+            }
+            if (vertMatches.Count > 3) {
+                falseSwipe.x = 1;
+            }
+            
+            if (combinedMatches.Count > minLength) {
+                DropBomb(x, y, falseSwipe, combinedMatches);
+            }
         }
         return combinedMatches;
     }
@@ -490,7 +492,7 @@ public class Board : MonoBehaviour {
             GamePiece piece = gamePieces[0];
             gamePieces.RemoveAt(0);
 
-            List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength);
+            List<GamePiece> matched = FindMatchesAt(piece.xIndex, piece.yIndex, minLength, true);
             gamePieces.RemoveAll(item => matched.IndexOf(item) >= 0);
             totalMatches = totalMatches.Union(matched).ToList();    
         }
@@ -500,7 +502,7 @@ public class Board : MonoBehaviour {
 
     List<GamePiece> FindAllMatches() {
         List<GamePiece> combinedMatches = new List<GamePiece>();
-
+        
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
                 var matches = FindMatchesAt(i, j);
