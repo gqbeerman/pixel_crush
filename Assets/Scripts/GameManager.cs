@@ -32,9 +32,13 @@ public class GameManager : Singleton<GameManager> {
 
     LevelGoal m_levelGoal;
 
+    LevelGoalTimed m_levelGoalTimed;
+
     public override void Awake() {
         base.Awake();
         m_levelGoal = GetComponent<LevelGoal>();
+        m_levelGoalTimed = GetComponent<LevelGoalTimed>();
+
         //cache reference to goal
         m_board = FindObjectOfType<Board>().GetComponent<Board>();
     }
@@ -58,11 +62,19 @@ public class GameManager : Singleton<GameManager> {
     }
 
     public void UpdateMoves() {
-        m_levelGoal.movesLeft--;
+        if(m_levelGoalTimed == null) {
+            m_levelGoal.movesLeft--;
 
-        if(movesLeftText != null) {
-            movesLeftText.text = m_levelGoal.movesLeft.ToString();
+            if (movesLeftText != null) {
+                movesLeftText.text = m_levelGoal.movesLeft.ToString();
+            }
+        } else {
+            if(movesLeftText != null) {
+                movesLeftText.text = "\u221E";
+                movesLeftText.fontSize = 70;
+            }
         }
+
     }
 
     public void BeginGame() {
@@ -100,6 +112,9 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator PlayGameRoutine() {
+        if(m_levelGoalTimed != null) {
+            m_levelGoalTimed.StartCountdown();
+        }
         //while the end game condition is not true, keep playing
         //keep waiting a frame and check game condition
         while (!IsGameOver) {

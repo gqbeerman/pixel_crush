@@ -8,6 +8,8 @@ public abstract class LevelGoal : Singleton<LevelGoal> {
 
     public int movesLeft = 30;
 
+    public int timeLeft = 60;
+
     // Start is called before the first frame update
     void Start() {
         Init();
