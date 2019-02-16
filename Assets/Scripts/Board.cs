@@ -329,6 +329,7 @@ public class Board : MonoBehaviour {
                 List<GamePiece> targetPieceMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex, 3, true);
                 List<GamePiece> colorMatches = new List<GamePiece>();
 
+                #region color bombs / power to power combo
                 //matching rainbow to regular color
                 if (IsColorBomb(clickedPiece) && !IsColorBomb(targetPiece)) {
                     clickedPiece.matchValue = targetPiece.matchValue;
@@ -350,23 +351,26 @@ public class Board : MonoBehaviour {
                     colorMatches = GetComboPieces(combo, targetTile.xIndex, targetTile.yIndex);
                     
                 }
+                #endregion
 
                 //block move from happening if there is no match and not a rainbow piece
                 if (targetPieceMatches.Count == 0 && clickePieceMatches.Count == 0 && colorMatches.Count == 0) {
                     clickedPiece.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
                     targetPiece.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
                 } else {
-                    if(GameManager.Instance != null) {
-                        //GameManager.Instance.movesLeft--;
-                        GameManager.Instance.UpdateMoves();
-                    }
-
                     yield return new WaitForSeconds(swapTime);
 
                     //get direction and placement of bomb during swap
                     Vector2 swipeDirection = new Vector2(targetTile.xIndex - clickedTile.xIndex, targetTile.yIndex - clickedTile.yIndex);
 
-                    ClearAndRefillBoard(clickePieceMatches.Union(targetPieceMatches).ToList().Union(colorMatches).ToList());
+                    List<GamePiece> piecesToClear = clickePieceMatches.Union(targetPieceMatches).ToList().Union(colorMatches).ToList();
+                    //ClearAndRefillBoard(clickePieceMatches.Union(targetPieceMatches).ToList().Union(colorMatches).ToList());
+                    yield return StartCoroutine(ClearAndRefillBoardRoutine(piecesToClear));
+
+                    if (GameManager.Instance != null) {
+                        //GameManager.Instance.movesLeft--;
+                        GameManager.Instance.UpdateMoves();
+                    }
                 }
             }
         }
@@ -574,7 +578,7 @@ public class Board : MonoBehaviour {
     }
 
     //clear list of gamepieces (plus potential sublist of gamepieces destroyed by bombs)
-    void ClearPiecesAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
+    void ClearPieceAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
                 //clear the gamepiece
@@ -596,6 +600,9 @@ public class Board : MonoBehaviour {
                         GameManager.Instance.AddTime(timeBonus.bonusValue);
                         Debug.Log("adding time bonus from " + piece.name + " of " + timeBonus.bonusValue);
                     }
+
+                    //update collection goals
+                    GameManager.Instance.UpdateCollectionGoals(piece);
                 }
 
                 //play particle effects for pieces destroyed
@@ -763,7 +770,7 @@ public class Board : MonoBehaviour {
             //fix for null reference error in GetColumns
             List<int> columnsToCollapse = GetColumns(gamePieces);
 
-            ClearPiecesAt(gamePieces, bombedPieces);
+            ClearPieceAt(gamePieces, bombedPieces);
             BreakTilesAt(gamePieces);
 
             for (int i = 0; i < spawnedPieces.Count; i++) {

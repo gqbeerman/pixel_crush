@@ -33,12 +33,16 @@ public class GameManager : Singleton<GameManager> {
     LevelGoal m_levelGoal;
 
     LevelGoalTimed m_levelGoalTimed;
+
+    LevelGoalCollected m_levelGoalCollected;
+
     public LevelGoalTimed LevelGoalTimed { get { return m_levelGoalTimed; } }
 
     public override void Awake() {
         base.Awake();
         m_levelGoal = GetComponent<LevelGoal>();
         m_levelGoalTimed = GetComponent<LevelGoalTimed>();
+        m_levelGoalCollected = GetComponent<LevelGoalCollected>();
 
         //cache reference to goal
         m_board = FindObjectOfType<Board>().GetComponent<Board>();
@@ -208,6 +212,12 @@ public class GameManager : Singleton<GameManager> {
     public void AddTime(int timeValue) {
         if(m_levelGoalTimed != null) {
             m_levelGoalTimed.AddTime(timeValue);
+        }
+    }
+
+    public void UpdateCollectionGoals(GamePiece pieceToCheck) {
+        if(m_levelGoalCollected != null) {
+            m_levelGoalCollected.UpdateGoals(pieceToCheck);
         }
     }
 }
