@@ -33,6 +33,7 @@ public class GameManager : Singleton<GameManager> {
     LevelGoal m_levelGoal;
 
     LevelGoalTimed m_levelGoalTimed;
+    public LevelGoalTimed LevelGoalTimed { get { return m_levelGoalTimed; } }
 
     public override void Awake() {
         base.Awake();
@@ -125,7 +126,14 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator WaitForBoardRoutine(float delay = 0f) {
-        if(m_board != null) {
+        if(m_levelGoalTimed != null) {
+            if(m_levelGoalTimed.timer != null) {
+                m_levelGoalTimed.timer.FadeOff();
+                m_levelGoalTimed.timer.paused = true;
+            }
+        }
+
+        if (m_board != null) {
             //wait for board class swap time
             yield return new WaitForSeconds(m_board.swapTime);
 
@@ -194,6 +202,12 @@ public class GameManager : Singleton<GameManager> {
             if (SoundManager.Instance != null && piece.clearSound != null) {
                 SoundManager.Instance.PlayClipAtPoint(piece.clearSound, Vector3.zero, SoundManager.Instance.fxVolume);
             }
+        }
+    }
+
+    public void AddTime(int timeValue) {
+        if(m_levelGoalTimed != null) {
+            m_levelGoalTimed.AddTime(timeValue);
         }
     }
 }

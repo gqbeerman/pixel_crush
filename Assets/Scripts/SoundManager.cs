@@ -22,20 +22,27 @@ public class SoundManager : Singleton<SoundManager> {
         PlayRandomMusic();
     }
 
-    public AudioSource PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1f) {
+    //replace unity's playclipatpoint to play audioclip at a world space position
+    public AudioSource PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1f, bool randomizePitch = true) {
         if(clip != null) {
+            //create new gameobject at the specified world space position
             GameObject go = new GameObject("SoundFX" + clip.name);
             go.transform.position = position;
 
+            //add an audisource component and set the audioclip
             AudioSource source = go.AddComponent<AudioSource>();
             source.clip = clip;
 
-            float randomPitch = Random.Range(lowPitch, highPitch);
-            source.pitch = randomPitch;
-
+            //change the pitch of the sound randomly
+            if (randomizePitch) {
+                float randomPitch = Random.Range(lowPitch, highPitch);
+                source.pitch = randomPitch;
+            }
+            //set volume
             source.volume = volume;
-
+            //play sound
             source.Play();
+            //destroy audiosource after the clip is done playing
             Destroy(go, clip.length);
             return source;
         }

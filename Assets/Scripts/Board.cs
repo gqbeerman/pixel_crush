@@ -573,19 +573,32 @@ public class Board : MonoBehaviour {
         }
     }
 
-    void ClearPiecseAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
+    //clear list of gamepieces (plus potential sublist of gamepieces destroyed by bombs)
+    void ClearPiecesAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
+                //clear the gamepiece
                 ClearPieceAt(piece.xIndex, piece.yIndex);
+
+                //add score bonus if 4 or more pieces cleared
                 int bonus = 0;
                 if(gamePieces.Count >= 4) {
                     bonus = 20;
                 }
 
                 if(GameManager.Instance != null) {
+                    //add bonus points
                     GameManager.Instance.ScorePoints(piece, m_scoreMultiplier, bonus);
+
+                    //add time bonus if in timed mode
+                    TimeBonus timeBonus = piece.GetComponent<TimeBonus>();
+                    if(timeBonus != null) {
+                        GameManager.Instance.AddTime(timeBonus.bonusValue);
+                        Debug.Log("adding time bonus from " + piece.name + " of " + timeBonus.bonusValue);
+                    }
                 }
 
+                //play particle effects for pieces destroyed
                 if(m_particleManager != null) {
                     if (bombedPieces.Contains(piece)) {
                         m_particleManager.BombFXAt(piece.xIndex, piece.yIndex);
@@ -750,7 +763,7 @@ public class Board : MonoBehaviour {
             //fix for null reference error in GetColumns
             List<int> columnsToCollapse = GetColumns(gamePieces);
 
-            ClearPiecseAt(gamePieces, bombedPieces);
+            ClearPiecesAt(gamePieces, bombedPieces);
             BreakTilesAt(gamePieces);
 
             for (int i = 0; i < spawnedPieces.Count; i++) {
@@ -758,12 +771,12 @@ public class Board : MonoBehaviour {
             }
             spawnedPieces.Clear();
             
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
             movingPieces = StartCollapse(columnsToCollapse);
             while (!FinishedCollapsing(movingPieces)) {
                 yield return null;              // wait to respawn
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
 
             //check for extra matches as result of collapse
             matches = FindMatchesWith(movingPieces);
