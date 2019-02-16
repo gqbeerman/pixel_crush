@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(LevelGoal))]
 public class GameManager : Singleton<GameManager> {
-    public int movesLeft = 30;
-    public int scoreGoal = 10000;
+    //public int movesLeft = 30;
+    //public int scoreGoal = 10000;
 
     public ScreenFader screenFader;
     public Text levelNameText;
@@ -27,22 +28,40 @@ public class GameManager : Singleton<GameManager> {
     public Sprite loseIcon;
     public Sprite winIcon;
     public Sprite goalIcon;
+    public ScoreMeter scoreMeter;
+
+    LevelGoal m_levelGoal;
+
+    public override void Awake() {
+        base.Awake();
+        m_levelGoal = GetComponent<LevelGoal>();
+        //cache reference to goal
+        m_board = FindObjectOfType<Board>().GetComponent<Board>();
+    }
 
     // Start is called before the first frame update
     void Start() {
-        m_board = FindObjectOfType<Board>().GetComponent<Board>();
+        //setup stars
+        if(scoreMeter != null) {
+            scoreMeter.SetupStars(m_levelGoal);
+        }
+        //get reference to current scene
         Scene scene = SceneManager.GetActiveScene();
 
+        //use screen name as level name
         if(levelNameText != null) {
             levelNameText.text = scene.name;
         }
+        m_levelGoal.movesLeft++;
         UpdateMoves();
         StartCoroutine(ExecuteGameLoop());
     }
 
     public void UpdateMoves() {
+        m_levelGoal.movesLeft--;
+
         if(movesLeftText != null) {
-            movesLeftText.text = movesLeft.ToString();
+            movesLeftText.text = m_levelGoal.movesLeft.ToString();
         }
     }
 
@@ -62,7 +81,7 @@ public class GameManager : Singleton<GameManager> {
     IEnumerator StartGameRoutine() {
         if(messageWindow != null) {
             messageWindow.GetComponent<RectXFormMover>().MoveOn();
-            messageWindow.ShowMessage(goalIcon, "score goal\n" + scoreGoal.ToString(), "start");
+            messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
         }
         while (!m_isReadyToBegin) {
             yield return null;
@@ -81,17 +100,11 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator PlayGameRoutine() {
+        //while the end game condition is not true, keep playing
+        //keep waiting a frame and check game condition
         while (!IsGameOver) {
-            if(ScoreManager.Instance != null) {
-                if(ScoreManager.Instance.CurrentScore >= scoreGoal) {
-                    IsGameOver = true;
-                    m_isWinner = true;
-                }
-            }
-            if (movesLeft <= 0) {
-                IsGameOver = true;
-                m_isWinner = false;
-            }
+            IsGameOver = m_levelGoal.IsGameOver();
+            m_isWinner = m_levelGoal.IsWinner();
             yield return null;
         }
     }
@@ -149,5 +162,23 @@ public class GameManager : Singleton<GameManager> {
 
     public void ReloadScene() {
         m_isReadyToReload = true;
+    }
+
+    public void ScorePoints(GamePiece piece, int multiplier = 1, int bonus = 0) {
+        if(piece != null) {
+            if (ScoreManager.Instance != null) {
+                ScoreManager.Instance.AddScore(piece.scoreValue * multiplier + bonus);
+                m_levelGoal.UpdateScoreStars(ScoreManager.Instance.CurrentScore);
+
+                //update score meter
+                if(scoreMeter != null) {
+                    scoreMeter.UpdateScoreMeter(ScoreManager.Instance.CurrentScore, m_levelGoal.scoreStars);
+                }
+            }
+
+            if (SoundManager.Instance != null && piece.clearSound != null) {
+                SoundManager.Instance.PlayClipAtPoint(piece.clearSound, Vector3.zero, SoundManager.Instance.fxVolume);
+            }
+        }
     }
 }

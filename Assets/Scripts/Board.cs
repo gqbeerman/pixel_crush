@@ -357,7 +357,7 @@ public class Board : MonoBehaviour {
                     targetPiece.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
                 } else {
                     if(GameManager.Instance != null) {
-                        GameManager.Instance.movesLeft--;
+                        //GameManager.Instance.movesLeft--;
                         GameManager.Instance.UpdateMoves();
                     }
 
@@ -581,7 +581,10 @@ public class Board : MonoBehaviour {
                 if(gamePieces.Count >= 4) {
                     bonus = 20;
                 }
-                piece.ScorePoints(m_scoreMultiplier, bonus);
+
+                if(GameManager.Instance != null) {
+                    GameManager.Instance.ScorePoints(piece, m_scoreMultiplier, bonus);
+                }
 
                 if(m_particleManager != null) {
                     if (bombedPieces.Contains(piece)) {
