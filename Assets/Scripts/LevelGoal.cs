@@ -9,6 +9,8 @@ public abstract class LevelGoal : Singleton<LevelGoal> {
     public int movesLeft = 30;
     virtual public string movesLeftText { get { return movesLeft.ToString(); } }
 
+    abstract public string goalsText { get; }
+
     public int timeLeft = 60;
 
     // Start is called before the first frame update

@@ -86,7 +86,7 @@ public class GameManager : Singleton<GameManager> {
     IEnumerator StartGameRoutine() {
         if(messageWindow != null) {
             messageWindow.GetComponent<RectXFormMover>().MoveOn();
-            messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
+            messageWindow.ShowMessage(goalIcon, LevelGoal.goalsText, "start");
         }
         while (!m_isReadyToBegin) {
             yield return null;

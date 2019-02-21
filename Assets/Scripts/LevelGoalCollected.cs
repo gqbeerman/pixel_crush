@@ -6,6 +6,14 @@ public class LevelGoalCollected : LevelGoal {
     public CollectionGoal[] collectionGoals;
     public CollectionGoalPanel[] uiPanels;
 
+    public override string goalsText { get {
+        string ret = "Collect";
+        foreach (CollectionGoal goal in collectionGoals) {
+            ret += "\n" + goal.numberToCollect.ToString() + " " + goal.prefabToCollect.name;
+        }
+        return ret;
+    } }
+
     public void UpdateGoals(GamePiece pieceToCheck) {
         if(pieceToCheck != null) {
             foreach(CollectionGoal goal in collectionGoals) {

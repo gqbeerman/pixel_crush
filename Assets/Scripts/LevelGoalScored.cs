@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LevelGoalScored : LevelGoal {
 
+    public override string goalsText { get { return "Score at least\n" + scoreGoals[0].ToString(); } }
+
     public override bool IsWinner() {
         //scoring higher than the lowest score equals a win
         if(ScoreManager.Instance != null) {
