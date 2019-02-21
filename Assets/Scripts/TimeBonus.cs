@@ -24,7 +24,7 @@ public class TimeBonus : MonoBehaviour {
 
         //turn off goal bonus if not a timed level
         if(GameManager.Instance != null) {
-            if(GameManager.Instance.LevelGoalTimed == null) {
+            if(!(GameManager.Instance.LevelGoal is LevelGoalTimed)) {
                 bonusValue = 0;
             }
         }

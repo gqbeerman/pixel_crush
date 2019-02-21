@@ -6,11 +6,14 @@ public class LevelGoalTimed : LevelGoal {
     public Timer timer;
     int m_maxTime;
 
+    override public string movesLeftText { get { return "\u221e"; } }
+
     void Start() {
         if(timer != null) {
             timer.InitTimer(timeLeft);
         }
         m_maxTime = timeLeft;
+        movesLeft = int.MaxValue;
     }
 
     public void StartCountdown() {

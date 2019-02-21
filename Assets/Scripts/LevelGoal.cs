@@ -7,6 +7,7 @@ public abstract class LevelGoal : Singleton<LevelGoal> {
     public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
 
     public int movesLeft = 30;
+    virtual public string movesLeftText { get { return movesLeft.ToString(); } }
 
     public int timeLeft = 60;
 

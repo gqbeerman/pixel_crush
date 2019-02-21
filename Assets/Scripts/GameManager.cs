@@ -32,17 +32,11 @@ public class GameManager : Singleton<GameManager> {
 
     LevelGoal m_levelGoal;
 
-    LevelGoalTimed m_levelGoalTimed;
-
-    LevelGoalCollected m_levelGoalCollected;
-
-    public LevelGoalTimed LevelGoalTimed { get { return m_levelGoalTimed; } }
+    public LevelGoal LevelGoal { get { return m_levelGoal; } }
 
     public override void Awake() {
         base.Awake();
         m_levelGoal = GetComponent<LevelGoal>();
-        m_levelGoalTimed = GetComponent<LevelGoalTimed>();
-        m_levelGoalCollected = GetComponent<LevelGoalCollected>();
 
         //cache reference to goal
         m_board = FindObjectOfType<Board>().GetComponent<Board>();
@@ -62,24 +56,18 @@ public class GameManager : Singleton<GameManager> {
             levelNameText.text = scene.name;
         }
         m_levelGoal.movesLeft++;
+        if (movesLeftText && m_levelGoal is LevelGoalTimed) {
+            movesLeftText.fontSize = 70;
+        }
         UpdateMoves();
         StartCoroutine(ExecuteGameLoop());
     }
 
     public void UpdateMoves() {
-        if(m_levelGoalTimed == null) {
-            m_levelGoal.movesLeft--;
-
-            if (movesLeftText != null) {
-                movesLeftText.text = m_levelGoal.movesLeft.ToString();
-            }
-        } else {
-            if(movesLeftText != null) {
-                movesLeftText.text = "\u221E";
-                movesLeftText.fontSize = 70;
-            }
+        m_levelGoal.movesLeft--;
+        if (movesLeftText) {
+            movesLeftText.text = m_levelGoal.movesLeftText;
         }
-
     }
 
     public void BeginGame() {
@@ -117,8 +105,8 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator PlayGameRoutine() {
-        if(m_levelGoalTimed != null) {
-            m_levelGoalTimed.StartCountdown();
+        if(m_levelGoal is LevelGoalTimed) {
+            (m_levelGoal as LevelGoalTimed).StartCountdown();
         }
         //while the end game condition is not true, keep playing
         //keep waiting a frame and check game condition
@@ -130,10 +118,11 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator WaitForBoardRoutine(float delay = 0f) {
-        if(m_levelGoalTimed != null) {
-            if(m_levelGoalTimed.timer != null) {
-                m_levelGoalTimed.timer.FadeOff();
-                m_levelGoalTimed.timer.paused = true;
+        if(m_levelGoal is LevelGoalTimed) {
+            LevelGoalTimed rfrnc = (LevelGoalTimed)m_levelGoal;
+            if(rfrnc.timer != null) {
+                rfrnc.timer.FadeOff();
+                rfrnc.timer.paused = true;
             }
         }
 
@@ -210,14 +199,14 @@ public class GameManager : Singleton<GameManager> {
     }
 
     public void AddTime(int timeValue) {
-        if(m_levelGoalTimed != null) {
-            m_levelGoalTimed.AddTime(timeValue);
+        if(m_levelGoal is LevelGoalTimed) {
+            (m_levelGoal as LevelGoalTimed).AddTime(timeValue);
         }
     }
 
     public void UpdateCollectionGoals(GamePiece pieceToCheck) {
-        if(m_levelGoalCollected != null) {
-            m_levelGoalCollected.UpdateGoals(pieceToCheck);
+        if(m_levelGoal is LevelGoalCollected) {
+            (m_levelGoal as LevelGoalCollected).UpdateGoals(pieceToCheck);
         }
     }
 }
