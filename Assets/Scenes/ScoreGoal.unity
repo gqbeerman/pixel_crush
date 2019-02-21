@@ -37161,13 +37161,28 @@ MonoBehaviour:
   maxCollectibles: 3
   collectibleCount: 0
   chanceForCollectible: 0.1
-  adjacentBombPrefab: {fileID: 2535790443906475647, guid: 012b642ac052147ce802d4cd646b90f4,
-    type: 3}
-  columnBombPrefab: {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771,
-    type: 3}
-  rowBombPrefab: {fileID: 6135440822068689972, guid: 16b6480910fda4f7c8f5c57649c985e3,
-    type: 3}
-  ColorBomPrefab: {fileID: 8428587372358135546, guid: 9473cad3cce464a889d818657426fc9a,
+  adjacentBombPrefabs:
+  - {fileID: 5210658830016986368, guid: 0085eb760543f4c0e9f4b594d53c148f, type: 3}
+  - {fileID: 4870883715338911710, guid: 7d20407c19d4f4a0bae36a2981fe449f, type: 3}
+  - {fileID: 5441331868528945538, guid: edbc8f397a12e4e09a64ce2fdfe547ae, type: 3}
+  - {fileID: 7677969863853965462, guid: 7ccdf8aaa69b744bca726d422b598704, type: 3}
+  - {fileID: 272902757876650404, guid: 2547b7ff5d23745769cb3dbbe26617e4, type: 3}
+  - {fileID: 6405637656238439257, guid: 0574ab7bfbf33420081b6488048216a3, type: 3}
+  columnBombPrefabs:
+  - {fileID: 3147288098758296890, guid: 155016e0a0b114bdf86717bf26169b9f, type: 3}
+  - {fileID: 3164327944472545212, guid: 04fee0b9c14934e3f9f18c499e2e4172, type: 3}
+  - {fileID: 627170274901701559, guid: 99e213307ece7440888827ca6eeb7ef5, type: 3}
+  - {fileID: 4093081350275234857, guid: ddf6e208256b4404b8ca09f93f3c2bf8, type: 3}
+  - {fileID: 5324844551708543546, guid: e21aa5eb0c8464a7392db76909ca29a5, type: 3}
+  - {fileID: 3018753952375584762, guid: d06d1dbe416d94b71a524a1a9158d836, type: 3}
+  rowBombPrefabs:
+  - {fileID: 1688287461447495476, guid: 042ca2e9dd5b6402081afb37b86b3ef1, type: 3}
+  - {fileID: 2815919682347416504, guid: 60ad43f34dd1e4408817410d1919479d, type: 3}
+  - {fileID: 5993167427675459515, guid: 3d67ca23e3bc24943a1fb3689380bedb, type: 3}
+  - {fileID: 136780633870822629, guid: f99d3df25b9b04ef0988e783fe4f1f56, type: 3}
+  - {fileID: 3559444937156632452, guid: 0055013ea0b384b3fb2e3245b3f192b8, type: 3}
+  - {fileID: 2643169142929968940, guid: 66c3e1a9fc5914f9f8bc3037fabd0016, type: 3}
+  ColorBombPrefab: {fileID: 8428587372358135546, guid: 9473cad3cce464a889d818657426fc9a,
     type: 3}
   swapTime: 0.3
   fillYOffset: 10
