@@ -920,29 +920,25 @@ public class Board : MonoBehaviour {
     }
 
     bool IsCornerMatch(List<GamePiece> gamePieces) {
-        bool vertical = false;
-        bool horizontal = false;
-        int xStart = -1;
-        int yStart = -1;
+        GamePiece startPiece = null;
+        int xDiff, yDiff;
+        xDiff = yDiff = 0;
 
-        foreach(GamePiece piece in gamePieces) {
-            if(piece != null) {
-                if(xStart == -1 || yStart == -1) {
-                    xStart = piece.xIndex;
-                    yStart = piece.yIndex;
-                    continue;
-                }
+        foreach (GamePiece piece in gamePieces) {
+            if (!startPiece) {
+                startPiece = piece;
+                continue;
             }
-
-            if(piece.xIndex != xStart && piece.yIndex == yStart) {
-                horizontal = true;
+            if (piece.xIndex != startPiece.xIndex) {
+                xDiff++;
             }
-
-            if(piece.xIndex == xStart && piece.yIndex != yStart) {
-                vertical = true;
+            if (piece.yIndex != startPiece.yIndex) {
+                yDiff++;
             }
         }
-        return (horizontal && vertical);
+        if (xDiff > 5 || yDiff > 5) { return false; }
+
+        return xDiff > 0 && yDiff > 0;
     }
 
     GameObject DropBomb(int x, int y, Vector2 swapDirection, List<GamePiece> gamePieces) {
