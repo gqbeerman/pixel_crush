@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using System.Linq;
 
 [RequireComponent(typeof(BoardDeadlock))]
@@ -168,7 +169,7 @@ public class Board : MonoBehaviour {
     }
 
     GameObject GetRandomObject(GameObject[] objectArray) {
-        int randomIdx = Random.Range(0, objectArray.Length);
+        int randomIdx = UnityEngine.Random.Range(0, objectArray.Length);
 
         if(objectArray[randomIdx] == null) {
             Debug.Log("Board.GetRandomObject at index " + randomIdx + " does not contain a valid Gameobject");
@@ -578,17 +579,18 @@ public class Board : MonoBehaviour {
     }
 
     //clear list of gamepieces (plus potential sublist of gamepieces destroyed by bombs)
-    void ClearPieceAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
+    void ClearPiecesAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces) {
+        //add score bonus if 4 or more pieces cleared
+        int bonus = 0;
+        if(gamePieces.Count >= 4) {
+            bonus = 20;
+        }
+
         foreach(GamePiece piece in gamePieces) {
             if(piece != null) {
                 //clear the gamepiece
                 ClearPieceAt(piece.xIndex, piece.yIndex);
-
-                //add score bonus if 4 or more pieces cleared
-                int bonus = 0;
-                if(gamePieces.Count >= 4) {
-                    bonus = 20;
-                }
+                MarkAdjacentExplosions(piece.xIndex, piece.yIndex);
 
                 if(GameManager.Instance != null) {
                     //add bonus points
@@ -617,6 +619,25 @@ public class Board : MonoBehaviour {
         }
     }
 
+    void MarkAdjacentExplosions(int xIndex, int yIndex) {
+        Tuple<int, int>[] neighbors = {
+            new Tuple<int, int>(xIndex-1, yIndex),
+            new Tuple<int, int>(xIndex+1, yIndex),
+            new Tuple<int, int>(xIndex, yIndex-1),
+            new Tuple<int, int>(xIndex, yIndex+1)
+        };
+
+        for (int i = 0; i < neighbors.Length; i++) {
+            Tuple<int, int> tuple = neighbors[i];
+            if (IsWithinBounds(tuple.Item1, tuple.Item2)) {
+                GamePiece neighbor = m_allGamePieces[tuple.Item1, tuple.Item2];
+                if (neighbor && neighbor is AdjacentExplodeObject) {
+                    ClearPieceAt(tuple.Item1, tuple.Item2);
+                }
+            }
+        }
+    }
+
     void BreakTileAt(int x, int y) {
         Tile tileToBreak = m_allTiles[x, y];
         if(tileToBreak != null && tileToBreak.tileType == TileType.Breakable) {
@@ -640,8 +661,14 @@ public class Board : MonoBehaviour {
 
         for(int i = 0; i < height - 1; i++) {
             if(m_allGamePieces[column, i] == null && m_allTiles[column, i].tileType != TileType.Obstacle) {
+                
                 for(int j = i + 1; j < height; j++) {
                     if(m_allGamePieces[column, j] != null) {
+                        
+                        if (m_allGamePieces[column, j] is AdjacentExplodeObject && 
+                        (m_allGamePieces[column, j] as AdjacentExplodeObject).stationary) {
+                            break;
+                        }
                         m_allGamePieces[column, j].Move(column, i, collapseTime * (j - i));
                         m_allGamePieces[column, i] = m_allGamePieces[column, j];
                         m_allGamePieces[column, i].SetCoord(column, i);
@@ -770,7 +797,7 @@ public class Board : MonoBehaviour {
             //fix for null reference error in GetColumns
             List<int> columnsToCollapse = GetColumns(gamePieces);
 
-            ClearPieceAt(gamePieces, bombedPieces);
+            ClearPiecesAt(gamePieces, bombedPieces);
             BreakTilesAt(gamePieces);
 
             for (int i = 0; i < spawnedPieces.Count; i++) {
@@ -1046,7 +1073,7 @@ public class Board : MonoBehaviour {
     }
 
     bool CanAddCollectible() {
-        return Random.Range(0f, 1f) <= chanceForCollectible && collectiblePrefabs.Length > 0 && collectibleCount < maxCollectibles;
+        return UnityEngine.Random.Range(0f, 1f) <= chanceForCollectible && collectiblePrefabs.Length > 0 && collectibleCount < maxCollectibles;
     }
 
     //remove collectibles from list of destroyable pieces

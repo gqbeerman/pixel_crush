@@ -46010,7 +46010,12 @@ MonoBehaviour:
     x: 6
     y: 4
     z: 0
-  startingGamePieces: []
+  startingGamePieces:
+  - prefab: {fileID: 1579193383427609557, guid: 0889b62bc058f214aa26c5a0b82355c8,
+      type: 3}
+    x: 4
+    y: 4
+    z: 0
   isRefilling: 0
 --- !u!4 &1521621293
 Transform:
