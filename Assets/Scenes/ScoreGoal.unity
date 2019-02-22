@@ -37148,6 +37148,64 @@ MonoBehaviour:
   width: 7
   height: 7
   borderSize: 1
+  settings:
+    starters:
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
   tileNormalPrefab: {fileID: 2962135267856225675, guid: 08d5fdd93d3ad49d697590b77013883b,
     type: 3}
   gamePiecePrefabs:
@@ -37198,17 +37256,7 @@ MonoBehaviour:
     x: 6
     y: 4
     z: 0
-  startingGamePieces:
-  - prefab: {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771,
-      type: 3}
-    x: 1
-    y: 1
-    z: 0
-  - prefab: {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771,
-      type: 3}
-    x: 1
-    y: 2
-    z: 0
+  startingGamePieces: []
   isRefilling: 0
 --- !u!114 &1500860314
 MonoBehaviour:

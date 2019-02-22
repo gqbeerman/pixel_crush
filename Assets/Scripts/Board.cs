@@ -67,7 +67,6 @@ public class Board : MonoBehaviour {
 
     [Header("Seed Board")]
     public StartingObject[] startingTiles;
-    public StartingObject[] startingGamePieces;
 
     ParticleManager m_particleManager;
 
@@ -162,13 +161,6 @@ public class Board : MonoBehaviour {
     }
 
     void SetupGamePieces() {
-        foreach(StartingObject sPiece in startingGamePieces) {
-            if(sPiece != null) {
-                GameObject piece = Instantiate(sPiece.prefab, new Vector3(sPiece.x, sPiece.y, 0), Quaternion.identity) as GameObject;
-                MakeGamePiece(piece, sPiece.x, sPiece.y, fillYOffset, fillMoveTime);
-            }
-        }
-
         for (int x = 0; x < settings.starters.Length; x++) {
             for (int y = 0; y < settings.starters[x].rowData.Length; y++) {
                 GameObject piece = settings.starters[x].rowData[y];
