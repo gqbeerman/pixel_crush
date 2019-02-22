@@ -4,6 +4,17 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+[Serializable]
+public class BoardSettings {
+    public Rows[] starters;
+
+    [Serializable]
+    public struct Rows {
+        public GameObject[] rowData;
+    }
+}
+
+
 [RequireComponent(typeof(BoardDeadlock))]
 [RequireComponent(typeof(BoardShuffler))]
 public class Board : MonoBehaviour {
@@ -11,6 +22,8 @@ public class Board : MonoBehaviour {
     public int width;
     public int height;
     public int borderSize;
+
+    public BoardSettings settings;
 
     [Header("Tiling")]
     public GameObject tileNormalPrefab;
@@ -153,6 +166,17 @@ public class Board : MonoBehaviour {
             if(sPiece != null) {
                 GameObject piece = Instantiate(sPiece.prefab, new Vector3(sPiece.x, sPiece.y, 0), Quaternion.identity) as GameObject;
                 MakeGamePiece(piece, sPiece.x, sPiece.y, fillYOffset, fillMoveTime);
+            }
+        }
+
+        for (int x = 0; x < settings.starters.Length; x++) {
+            for (int y = 0; y < settings.starters[x].rowData.Length; y++) {
+                GameObject piece = settings.starters[x].rowData[y];
+                if (piece) {
+                    int yPos = (settings.starters[x].rowData.Length - 1) - y;
+                    piece = Instantiate(piece, new Vector3(x, yPos, 0), Quaternion.identity);
+                    MakeGamePiece(piece, x, yPos, fillYOffset, fillMoveTime);
+                }
             }
         }
     }

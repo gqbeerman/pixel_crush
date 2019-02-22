@@ -45960,6 +45960,64 @@ MonoBehaviour:
   width: 7
   height: 7
   borderSize: 0
+  settings:
+    starters:
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 5740384639867544878, guid: de7b9e8bcfb980c448ae175ed7f957c6, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
   tileNormalPrefab: {fileID: 2962135267856225675, guid: 08d5fdd93d3ad49d697590b77013883b,
     type: 3}
   gamePiecePrefabs:
@@ -46010,22 +46068,7 @@ MonoBehaviour:
     x: 6
     y: 4
     z: 0
-  startingGamePieces:
-  - prefab: {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9,
-      type: 3}
-    x: 4
-    y: 4
-    z: 0
-  - prefab: {fileID: 5740384639867544878, guid: de7b9e8bcfb980c448ae175ed7f957c6,
-      type: 3}
-    x: 3
-    y: 4
-    z: 0
-  - prefab: {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9,
-      type: 3}
-    x: 5
-    y: 4
-    z: 0
+  startingGamePieces: []
   isRefilling: 0
 --- !u!4 &1521621293
 Transform:
