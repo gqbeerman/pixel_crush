@@ -4,13 +4,24 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+[Serializable]
+public class BoardSettings {
+    public RowData[] startingObjects;
+
+    [Serializable]
+    public struct RowData {
+        public GameObject[] rows;
+    }
+}
+
 [RequireComponent(typeof(BoardDeadlock))]
 [RequireComponent(typeof(BoardShuffler))]
 public class Board : MonoBehaviour {
     [Header("Board Attributes")]
-    public int width;
-    public int height;
+    int width;
+    int height;
     public int borderSize;
+    public BoardSettings settings;
 
     [Header("Tiling")]
     public GameObject tileNormalPrefab;
@@ -54,7 +65,6 @@ public class Board : MonoBehaviour {
 
     [Header("Seed Board")]
     public StartingObject[] startingTiles;
-    public StartingObject[] startingGamePieces;
 
     ParticleManager m_particleManager;
 
@@ -75,6 +85,9 @@ public class Board : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        width = settings.startingObjects.Length;
+        height = settings.startingObjects[0].rows.Length;
+
         m_allTiles = new Tile[width, height];
         m_allGamePieces = new GamePiece[width, height];
         m_particleManager = GameObject.FindWithTag("Particle Manager").GetComponent<ParticleManager>();
@@ -149,10 +162,14 @@ public class Board : MonoBehaviour {
     }
 
     void SetupGamePieces() {
-        foreach(StartingObject sPiece in startingGamePieces) {
-            if(sPiece != null) {
-                GameObject piece = Instantiate(sPiece.prefab, new Vector3(sPiece.x, sPiece.y, 0), Quaternion.identity) as GameObject;
-                MakeGamePiece(piece, sPiece.x, sPiece.y, fillYOffset, fillMoveTime);
+        for (int x = 0; x < settings.startingObjects.Length; x++) {
+            for (int y = 0; y < settings.startingObjects[x].rows.Length; y++) {
+                GameObject piece = settings.startingObjects[x].rows[y];
+                if (piece) {
+                    int yPos = (height - 1) - y;
+                    piece = Instantiate(piece, new Vector3(x, yPos, 0), Quaternion.identity);
+                    MakeGamePiece(piece, x, yPos, fillYOffset, fillMoveTime);
+                }
             }
         }
     }
