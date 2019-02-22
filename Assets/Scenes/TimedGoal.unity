@@ -46771,8 +46771,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eebd2057bb8704b37975de636780ccc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 7
-  height: 7
   borderSize: 1
   settings:
     starters:
@@ -46789,8 +46787,8 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771, type: 3}
-      - {fileID: 2785206334519952861, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
       - {fileID: 0}
     - rowData:
       - {fileID: 0}
@@ -46828,6 +46826,63 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    starterTiles:
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 4890273610810747452, guid: 53357aaebc52f49d18207fe12f1e8b72, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -46871,18 +46926,7 @@ MonoBehaviour:
   swapTime: 0.3
   fillYOffset: 10
   fillMoveTime: 0.5
-  startingTiles:
-  - prefab: {fileID: 7838320496686735226, guid: 53357aaebc52f49d18207fe12f1e8b72,
-      type: 3}
-    x: 4
-    y: 4
-    z: 0
-  - prefab: {fileID: 8614486827198624010, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca,
-      type: 3}
-    x: 6
-    y: 4
-    z: 0
-  startingGamePieces: []
+  startingTiles: []
   isRefilling: 0
 --- !u!114 &1518001982
 MonoBehaviour:

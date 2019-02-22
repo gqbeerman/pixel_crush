@@ -7,10 +7,16 @@ using System.Linq;
 [Serializable]
 public class BoardSettings {
     public Rows[] starters;
+    public TileRows[] starterTiles;
 
     [Serializable]
     public struct Rows {
-        public GameObject[] rowData;
+        public GamePiece[] rowData;
+    }
+
+    [Serializable]
+    public struct TileRows {
+        public Tile[] rowData;
     }
 }
 
@@ -65,9 +71,6 @@ public class Board : MonoBehaviour {
 
     bool m_playerInputEnabled = true;
 
-    [Header("Seed Board")]
-    public StartingObject[] startingTiles;
-
     ParticleManager m_particleManager;
 
     int m_scoreMultiplier = 0;
@@ -76,14 +79,6 @@ public class Board : MonoBehaviour {
 
     BoardDeadlock m_boardDeadlock;
     BoardShuffler m_boardShuffler;
-
-    [System.Serializable]
-    public class StartingObject {
-        public GameObject prefab;
-        public int x;
-        public int y;
-        public int z;
-    }
 
     // Start is called before the first frame update
     void Start() {
@@ -149,16 +144,15 @@ public class Board : MonoBehaviour {
     }
 
     void SetupTiles() {
-        foreach(StartingObject sTile in startingTiles) {
-            if(sTile != null) {
-                MakeTile(sTile.prefab, sTile.x, sTile.y, sTile.z);
-            }
-        }
-        for (int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
-                if(m_allTiles[i, j] == null) {
-                    MakeTile(tileNormalPrefab, i, j);
+        for (int x = 0; x < settings.starterTiles.Length; x++) {
+            for (int y = 0; y < settings.starterTiles[x].rowData.Length; y++) {
+                Tile tile = settings.starterTiles[x].rowData[y];
+                int yPos = (settings.starterTiles[x].rowData.Length - 1) - y;
+
+                if (tile == null) {
+                    tile = tileNormalPrefab.GetComponent<Tile>();
                 }
+                MakeTile(tile.gameObject, x, yPos);
             }
         }
     }
@@ -166,11 +160,11 @@ public class Board : MonoBehaviour {
     void SetupGamePieces() {
         for (int x = 0; x < settings.starters.Length; x++) {
             for (int y = 0; y < settings.starters[x].rowData.Length; y++) {
-                GameObject piece = settings.starters[x].rowData[y];
+                GamePiece piece = settings.starters[x].rowData[y];
                 if (piece) {
                     int yPos = (settings.starters[x].rowData.Length - 1) - y;
                     piece = Instantiate(piece, new Vector3(x, yPos, 0), Quaternion.identity);
-                    MakeGamePiece(piece, x, yPos, fillYOffset, fillMoveTime);
+                    MakeGamePiece(piece.gameObject, x, yPos, fillYOffset, fillMoveTime);
                 }
             }
         }
