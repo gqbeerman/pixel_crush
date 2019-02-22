@@ -19,8 +19,8 @@ public class BoardSettings {
 [RequireComponent(typeof(BoardShuffler))]
 public class Board : MonoBehaviour {
     [Header("Board Attributes")]
-    public int width;
-    public int height;
+    int width;
+    int height;
     public int borderSize;
 
     public BoardSettings settings;
@@ -87,6 +87,9 @@ public class Board : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        width = settings.starters.Length;
+        height = settings.starters[0].rowData.Length;
+
         m_allTiles = new Tile[width, height];
         m_allGamePieces = new GamePiece[width, height];
         m_particleManager = GameObject.FindWithTag("Particle Manager").GetComponent<ParticleManager>();
