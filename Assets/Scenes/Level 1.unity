@@ -46011,9 +46011,19 @@ MonoBehaviour:
     y: 4
     z: 0
   startingGamePieces:
-  - prefab: {fileID: 1579193383427609557, guid: 0889b62bc058f214aa26c5a0b82355c8,
+  - prefab: {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9,
       type: 3}
     x: 4
+    y: 4
+    z: 0
+  - prefab: {fileID: 5740384639867544878, guid: de7b9e8bcfb980c448ae175ed7f957c6,
+      type: 3}
+    x: 3
+    y: 4
+    z: 0
+  - prefab: {fileID: 1758897331857610028, guid: fd4b7fa32970dcc439ab0a83ddb761f9,
+      type: 3}
+    x: 5
     y: 4
     z: 0
   isRefilling: 0

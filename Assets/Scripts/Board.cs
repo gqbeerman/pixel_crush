@@ -561,8 +561,11 @@ public class Board : MonoBehaviour {
     void ClearPieceAt(int x, int y) {
         GamePiece pieceToClear = m_allGamePieces[x, y];
         if(pieceToClear != null) {
-            m_allGamePieces[x, y] = null;
-            Destroy(pieceToClear.gameObject);
+            bool destroy = pieceToClear.Break();
+            if (destroy) {
+                m_allGamePieces[x, y] = null;
+                Destroy(pieceToClear.gameObject);
+            }
         }
         HighlightTileOff(x, y);
     }

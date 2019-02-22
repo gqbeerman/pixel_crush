@@ -14,6 +14,7 @@ public enum MatchValue {
     none
 };
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class GamePiece : MonoBehaviour {
     public int xIndex;
     public int yIndex;
@@ -33,14 +34,25 @@ public class GamePiece : MonoBehaviour {
     };
 
     public MatchValue matchValue;
+    
+    public int breakableValue = 0;
+    public Sprite[] breakableSprites = new Sprite[1];
+    SpriteRenderer m_spriteRenderer;
 
     public int scoreValue = 20;
 
     public AudioClip clearSound;
 
+    void AssignSprite() {
+        if (breakableSprites[breakableValue] != null) {
+            m_spriteRenderer.sprite = breakableSprites[breakableValue];
+        }
+    }
+
     // Start is called before the first frame update
     void Start() {
-        
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
+        AssignSprite();
     }
 
     // Update is called once per frame
@@ -120,5 +132,13 @@ public class GamePiece : MonoBehaviour {
             }
             matchValue = pieceToMatch.matchValue;
         }
+    }
+
+    public bool Break() {
+        breakableValue--;
+        if (breakableValue >= 0) {
+            AssignSprite();
+        }
+        return breakableValue < 0;
     }
 }
