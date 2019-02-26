@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b46d5ae64ab654584eff171a40a828, type: 3}
-  m_Name: 124
+  m_Name: collection
   m_EditorClassIdentifier: 
   boardSettings:
     starters:
@@ -27,14 +27,6 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
-      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
-      - {fileID: 0}
-    - rowData:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -57,7 +49,7 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 3318719957859756160, guid: de7b9e8bcfb980c448ae175ed7f957c6, type: 3}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -65,7 +57,15 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
+      - {fileID: 8777335974554392706, guid: fd4b7fa32970dcc439ab0a83ddb761f9, type: 3}
       - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 8777335974554392706, guid: fd4b7fa32970dcc439ab0a83ddb761f9, type: 3}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -114,7 +114,7 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
+      - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -128,5 +128,5 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
   goalSettings:
-    scoreGoals: 10270000204e000030750000
-    movesLeft: 22
+    scoreGoals: e8030000d0070000ac0d0000
+    movesLeft: 30

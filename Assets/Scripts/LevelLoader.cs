@@ -20,10 +20,10 @@ public class LevelLoader : MonoBehaviour
         if (toLoad) {
             _board.settings = toLoad.boardSettings;
             
+            LevelGoal oldGoal, goal;
             System.Type goalType = toLoad.goalSettings.GetType();
             GameObject gO = GameManager.Instance.gameObject;
-            LevelGoal goal = gO.GetComponent<LevelGoal>();
-            DestroyImmediate(goal);
+            oldGoal = gO.GetComponent<LevelGoal>();
             if (goalType == typeof(TimedGoalData)) {
                 goal = gO.AddComponent(typeof(LevelGoalTimed)) as LevelGoal;
             }
@@ -33,8 +33,8 @@ public class LevelLoader : MonoBehaviour
             else {
                 goal = gO.AddComponent(typeof(LevelGoalScored)) as LevelGoal;
             }
-
             goal.Load(toLoad.goalSettings);
+            DestroyImmediate(oldGoal);
         }
     }
 
