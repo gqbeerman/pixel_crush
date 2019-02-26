@@ -37126,6 +37126,7 @@ GameObject:
   - component: {fileID: 1500860313}
   - component: {fileID: 1500860315}
   - component: {fileID: 1500860314}
+  - component: {fileID: 1500860317}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -37191,7 +37192,7 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -37248,7 +37249,7 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -37300,7 +37301,6 @@ MonoBehaviour:
   swapTime: 0.3
   fillYOffset: 10
   fillMoveTime: 0.5
-  startingTiles: []
   isRefilling: 0
 --- !u!114 &1500860314
 MonoBehaviour:
@@ -37340,6 +37340,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1500860317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500860312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a741de16172424c9f5c49438d9642c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1549210197
 GameObject:
   m_ObjectHideFlags: 0
@@ -42418,7 +42430,6 @@ MonoBehaviour:
   scoreStars: 0
   scoreGoals: 10270000204e000030750000
   movesLeft: 30
-  timeLeft: 0
 --- !u!4 &1588000046
 Transform:
   m_ObjectHideFlags: 0

@@ -1,8 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-public abstract class LevelGoal : Singleton<LevelGoal> {
+[System.Serializable]
+public class LevelGoalData {
+    public int[] scoreGoals;
+    public int movesLeft;
+
+    public virtual void OnGui () {
+        movesLeft = EditorGUILayout.IntField("Moves Left", movesLeft);
+        EditorHelper.HorizontalIntArray(scoreGoals, "Score", true);
+    }
+}
+
+public abstract class LevelGoal : MonoBehaviour {
+
     public int scoreStars = 0;
     public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
 
@@ -11,7 +24,17 @@ public abstract class LevelGoal : Singleton<LevelGoal> {
 
     abstract public string goalsText { get; }
 
-    public int timeLeft = 60;
+    abstract public LevelGoalData ForSave ();
+    protected LevelGoalData BaseForSave (LevelGoalData data) {
+        data.scoreGoals = (int[])scoreGoals.Clone();
+        data.movesLeft = movesLeft;
+        return data;
+    }
+
+    public virtual void Load (LevelGoalData data) {
+        movesLeft = data.movesLeft;
+        scoreGoals = (int[])data.scoreGoals.Clone();
+    }
 
     // Start is called before the first frame update
     void Start() {

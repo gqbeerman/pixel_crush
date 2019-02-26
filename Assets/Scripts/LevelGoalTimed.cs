@@ -1,8 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
+[System.Serializable]
+public class TimedGoalData : LevelGoalData {
+    public int timeLeft;
+
+    public override void OnGui () {
+        base.OnGui();
+        timeLeft = EditorGUILayout.IntField("Time", timeLeft);
+    }
+}
 
 public class LevelGoalTimed : LevelGoal {
+    public int timeLeft = 60;
+
     public Timer timer;
     int m_maxTime;
 
@@ -11,6 +24,21 @@ public class LevelGoalTimed : LevelGoal {
     override public string goalsText { get { 
         return "Score at least\n" + scoreGoals[0].ToString() + "\nin under\n" + timeLeft.ToString() + "s"; 
     } }
+
+    override public LevelGoalData ForSave () {
+        TimedGoalData data = new TimedGoalData();
+        data = BaseForSave(data) as TimedGoalData;
+        data.timeLeft = timeLeft;
+        return data;
+    }
+
+    override public void Load (LevelGoalData data) { 
+        TimedGoalData casted = data as TimedGoalData;
+        if (casted != null) {
+            timeLeft = casted.timeLeft;
+        }
+        base.Load(data);
+    }
 
     void Start() {
         if(timer != null) {

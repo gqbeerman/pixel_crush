@@ -4,23 +4,6 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-[Serializable]
-public class BoardSettings {
-    public Rows[] starters;
-    public TileRows[] starterTiles;
-
-    [Serializable]
-    public struct Rows {
-        public GamePiece[] rowData;
-    }
-
-    [Serializable]
-    public struct TileRows {
-        public Tile[] rowData;
-    }
-}
-
-
 [RequireComponent(typeof(BoardDeadlock))]
 [RequireComponent(typeof(BoardShuffler))]
 public class Board : MonoBehaviour {
@@ -63,11 +46,11 @@ public class Board : MonoBehaviour {
     public int fillYOffset = 10;
     public float fillMoveTime = 0.5f;
 
-    Tile[,] m_allTiles;
+    TilePiece[,] m_allTiles;
     GamePiece[,] m_allGamePieces;
 
-    Tile m_clickedTile;
-    Tile m_targetTile;
+    TilePiece m_clickedTile;
+    TilePiece m_targetTile;
 
     bool m_playerInputEnabled = true;
 
@@ -85,7 +68,7 @@ public class Board : MonoBehaviour {
         width = settings.starters.Length;
         height = settings.starters[0].rowData.Length;
 
-        m_allTiles = new Tile[width, height];
+        m_allTiles = new TilePiece[width, height];
         m_allGamePieces = new GamePiece[width, height];
         m_particleManager = GameObject.FindWithTag("Particle Manager").GetComponent<ParticleManager>();
         m_boardDeadlock = GetComponent<BoardDeadlock>();
@@ -109,7 +92,7 @@ public class Board : MonoBehaviour {
             GameObject tile = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity) as GameObject;
             tile.name = "Tile (" + x + "," + y + ")";
 
-            m_allTiles[x, y] = tile.GetComponent<Tile>();
+            m_allTiles[x, y] = tile.GetComponent<TilePiece>();
             tile.transform.parent = transform;
             m_allTiles[x, y].Init(x, y, this);
         }
@@ -146,11 +129,11 @@ public class Board : MonoBehaviour {
     void SetupTiles() {
         for (int x = 0; x < settings.starterTiles.Length; x++) {
             for (int y = 0; y < settings.starterTiles[x].rowData.Length; y++) {
-                Tile tile = settings.starterTiles[x].rowData[y];
+                TilePiece tile = settings.starterTiles[x].rowData[y];
                 int yPos = (settings.starterTiles[x].rowData.Length - 1) - y;
 
                 if (tile == null) {
-                    tile = tileNormalPrefab.GetComponent<Tile>();
+                    tile = tileNormalPrefab.GetComponent<TilePiece>();
                 }
                 MakeTile(tile.gameObject, x, yPos);
             }
@@ -303,14 +286,14 @@ public class Board : MonoBehaviour {
         return (leftMatches.Count > 0 || downwardMatches.Count > 0);
     }
 
-    public void ClickTile(Tile tile) {
+    public void ClickTile(TilePiece tile) {
         if(m_clickedTile == null) {
             m_clickedTile = tile;
             //Debug.Log("clicked tile: " + tile.name);
         }
     }
 
-    public void DragToTile(Tile tile) {
+    public void DragToTile(TilePiece tile) {
         if(m_clickedTile != null && IsNextTo(tile, m_clickedTile)) {
             m_targetTile = tile;
         }
@@ -324,11 +307,11 @@ public class Board : MonoBehaviour {
         m_targetTile = null;
     }
 
-    void SwitchTiles(Tile clickedTile, Tile targetTile) {
+    void SwitchTiles(TilePiece clickedTile, TilePiece targetTile) {
         StartCoroutine(SwitchTilesRoutine(clickedTile, targetTile));
     }
 
-    IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile) {
+    IEnumerator SwitchTilesRoutine(TilePiece clickedTile, TilePiece targetTile) {
         if (m_playerInputEnabled && !GameManager.Instance.IsGameOver) {
             GamePiece clickedPiece = m_allGamePieces[clickedTile.xIndex, clickedTile.yIndex];
             GamePiece targetPiece = m_allGamePieces[targetTile.xIndex, targetTile.yIndex];
@@ -390,7 +373,7 @@ public class Board : MonoBehaviour {
         }
     }
 
-    bool IsNextTo(Tile start, Tile end) {
+    bool IsNextTo(TilePiece start, TilePiece end) {
         if(Mathf.Abs(start.xIndex - end.xIndex) == 1 && start.yIndex == end.yIndex) {
             return true;
         }
@@ -655,7 +638,7 @@ public class Board : MonoBehaviour {
     }
 
     void BreakTileAt(int x, int y) {
-        Tile tileToBreak = m_allTiles[x, y];
+        TilePiece tileToBreak = m_allTiles[x, y];
         if(tileToBreak != null && tileToBreak.tileType == TileType.Breakable) {
             if(m_particleManager != null) {
                 m_particleManager.BreakTileFXAt(tileToBreak.breakableValue, x, y, 0);

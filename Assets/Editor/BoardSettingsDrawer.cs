@@ -64,7 +64,7 @@ public class BoardSettingsDrawer : PropertyDrawer
                 }
                 for (int j = 0; j < height; j++) {
                     pos = new Rect(sX + (i * rWidth), sY + (j * 18f), rWidth, 18f);
-                    EditorGUI.ObjectField(pos, rowData.GetArrayElementAtIndex(j), typeof(Tile), GUIContent.none);
+                    EditorGUI.ObjectField(pos, rowData.GetArrayElementAtIndex(j), typeof(TilePiece), GUIContent.none);
                 }
             }
         }

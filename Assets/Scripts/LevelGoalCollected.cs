@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class CollectedGoalData : LevelGoalData {
+}
+
 public class LevelGoalCollected : LevelGoal {
     public CollectionGoal[] collectionGoals;
     public CollectionGoalPanel[] uiPanels;
@@ -13,6 +17,12 @@ public class LevelGoalCollected : LevelGoal {
         }
         return ret;
     } }
+
+    override public LevelGoalData ForSave () {
+        CollectedGoalData data = new CollectedGoalData();
+        data = BaseForSave(data) as CollectedGoalData;
+        return data;
+    }
 
     public void UpdateGoals(GamePiece pieceToCheck) {
         if(pieceToCheck != null) {
