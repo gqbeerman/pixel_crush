@@ -7,8 +7,13 @@ using System;
 [Serializable]
 public class LevelDataSO : ScriptableObject {
     
-    [HideInInspector] public BoardSettings boardSettings;
-    public LevelGoalData goalSettings;
+    public BoardSettings boardSettings;
+    public LevelGoalData scoreGoal;
+    public TimedGoalData timedGoal;
+    public CollectedGoalData collectedGoal;
+    public bool scoreEnabled;
+    public bool timedEnabled;
+    public bool collectedEnabled;
 }
 
 [Serializable]

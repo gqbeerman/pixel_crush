@@ -40,7 +40,7 @@ public class LevelGoalTimed : LevelGoal {
         base.Load(data);
     }
 
-    void Start() {
+    override protected void Init () {
         if(timer != null) {
             timer.InitTimer(timeLeft);
         }

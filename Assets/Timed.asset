@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b46d5ae64ab654584eff171a40a828, type: 3}
-  m_Name: 123
+  m_Name: Timed
   m_EditorClassIdentifier: 
   boardSettings:
     starters:
@@ -19,8 +19,8 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 4098007361420904095, guid: 35ce3b46831de45deafd36859cd307b8, type: 3}
-      - {fileID: 4098007361420904095, guid: 35ce3b46831de45deafd36859cd307b8, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
       - {fileID: 0}
     - rowData:
       - {fileID: 0}
@@ -57,7 +57,7 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -106,6 +106,14 @@ MonoBehaviour:
     - rowData:
       - {fileID: 0}
       - {fileID: 0}
+      - {fileID: 4890273610810747452, guid: 53357aaebc52f49d18207fe12f1e8b72, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
@@ -119,14 +127,18 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
-    - rowData:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-  goalSettings:
-    scoreGoals: 10270000204e000030750000
-    movesLeft: 15
+  scoreGoal:
+    scoreGoals: 
+    movesLeft: 0
+  timedGoal:
+    scoreGoals: e8030000d0070000b80b0000
+    movesLeft: 30
+    timeLeft: 60
+  collectedGoal:
+    scoreGoals: 
+    movesLeft: 0
+    goalPrefabs: []
+    goalQuantities: 
+  scoreEnabled: 0
+  timedEnabled: 1
+  collectedEnabled: 0

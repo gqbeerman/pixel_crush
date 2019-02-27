@@ -16,6 +16,14 @@ public class Timer : MonoBehaviour {
     public Color flashColor = Color.red;
     IEnumerator m_flashRoutine;
 
+    void Start () {
+        LevelGoalTimed goal = GameManager.Instance.GetComponent<LevelGoalTimed>();
+        if (goal != null && goal.timer == null) {
+            goal.timer = this;
+            InitTimer(goal.timeLeft);
+        }
+    }
+
     public void InitTimer(int maxTime = 60) {
         m_maxTime = maxTime;
 

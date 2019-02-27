@@ -10,13 +10,19 @@ public class LevelGoalData {
 
     public virtual void OnGui () {
         movesLeft = EditorGUILayout.IntField("Moves Left", movesLeft);
+        
+        if (scoreGoals == null) {
+            scoreGoals =  new int[3]{1000, 2000, 3000};
+        }
         EditorHelper.HorizontalIntArray(scoreGoals, "Score", true);
     }
 }
 
+[ExecuteInEditMode]
 public abstract class LevelGoal : MonoBehaviour {
 
-    public int scoreStars = 0;
+    int _scoreStars = 0;
+    public int scoreStars { get { return _scoreStars; } }
     public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
 
     public int movesLeft = 30;
@@ -37,12 +43,13 @@ public abstract class LevelGoal : MonoBehaviour {
     }
 
     // Start is called before the first frame update
+    // want to init some props in editor too (for cleanup)
     void Start() {
         Init();
     }
 
-    void Init() {
-        scoreStars = 0;
+    protected virtual void Init() {
+        _scoreStars = 0;
         for (int i = 1; i < scoreGoals.Length; i++) {
             if(scoreGoals[i] < scoreGoals[i - 1]) {
                 Debug.LogWarning("make sure your goals are increasing order");
@@ -60,7 +67,7 @@ public abstract class LevelGoal : MonoBehaviour {
     }
 
     public void UpdateScoreStars(int score) {
-        scoreStars = UpdateScore(score);
+        _scoreStars = UpdateScore(score);
     }
 
     public abstract bool IsWinner();

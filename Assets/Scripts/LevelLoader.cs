@@ -9,11 +9,13 @@ using System.IO;
 public class LevelLoader : MonoBehaviour
 {
     Board _board;
+    GameManager _gameManager;
     
     // Start is called before the first frame update
     void Start()
     {
         _board = GetComponent<Board>();
+        _gameManager = GameManager.Instance;
     }
 
     public void Load (LevelDataSO toLoad) {
@@ -21,28 +23,43 @@ public class LevelLoader : MonoBehaviour
             _board.settings = toLoad.boardSettings;
             
             LevelGoal oldGoal, goal;
-            System.Type goalType = toLoad.goalSettings.GetType();
-            GameObject gO = GameManager.Instance.gameObject;
-            oldGoal = gO.GetComponent<LevelGoal>();
-            if (goalType == typeof(TimedGoalData)) {
-                goal = gO.AddComponent(typeof(LevelGoalTimed)) as LevelGoal;
+            oldGoal = _gameManager.GetComponent<LevelGoal>();
+            
+            if (toLoad.timedEnabled) {
+                goal = _gameManager.gameObject.AddComponent<LevelGoalTimed>() as LevelGoal;
+                goal.Load(toLoad.timedGoal);
             }
-            else if (goalType == typeof(CollectedGoalData)) {
-                goal = gO.AddComponent(typeof(LevelGoalCollected)) as LevelGoal;
+            else if (toLoad.collectedEnabled) {
+                goal = _gameManager.gameObject.AddComponent<LevelGoalCollected>() as LevelGoal;
+                goal.Load(toLoad.collectedGoal);
             }
             else {
-                goal = gO.AddComponent(typeof(LevelGoalScored)) as LevelGoal;
+                goal = _gameManager.gameObject.AddComponent<LevelGoalScored>() as LevelGoal;
+                goal.Load(toLoad.scoreGoal);
             }
-            goal.Load(toLoad.goalSettings);
+
             DestroyImmediate(oldGoal);
         }
     }
 
     public void Save (string fileName) {
-        LevelGoal lG = GameManager.Instance.GetComponent<LevelGoal>();
+        LevelGoalData goalData = _gameManager.GetComponent<LevelGoal>().ForSave();
         LevelDataSO data = CreateAsset<LevelDataSO>(fileName);
         data.boardSettings = _board.settings;
-        data.goalSettings = lG.ForSave();
+
+        if (goalData.GetType() == typeof(CollectedGoalData)) {
+            data.collectedGoal = (CollectedGoalData)goalData;
+            data.collectedEnabled = true;
+        }
+        else if (goalData.GetType() == typeof(TimedGoalData)) {
+            data.timedGoal = (TimedGoalData)goalData;
+            data.timedEnabled = true;
+        }
+        else {
+            data.scoreGoal = goalData;
+            data.scoreEnabled = true;
+        }
+
         EditorUtility.SetDirty(data);
     }
 

@@ -10,6 +10,13 @@ public class CollectedGoalData : LevelGoalData {
 
     public override void OnGui () {
         base.OnGui();
+        
+        if (goalPrefabs == null) {
+            goalPrefabs = new List<GamePiece>();
+        }
+        if (goalQuantities == null) {
+            goalQuantities = new List<int>();
+        }
 
         EditorGUILayout.LabelField("Collections");
         int count = Mathf.Min(goalPrefabs.Count, goalQuantities.Count);
@@ -39,6 +46,8 @@ public class CollectedGoalData : LevelGoalData {
     }
 }
 
+
+[ExecuteInEditMode]
 public class LevelGoalCollected : LevelGoal {
     public CollectionGoal[] collectionGoals;
     public CollectionGoalPanel[] uiPanels;
@@ -83,15 +92,19 @@ public class LevelGoalCollected : LevelGoal {
         base.Load(data);
     }
 
-    void Start () {
+    override protected void Init () {
+        base.Init();
         if (collectionGoals == null || collectionGoals.Length == 0) {
             collectionGoals = GetComponentsInChildren<CollectionGoal>();
         }
     }
 
+// for edit mode
     void OnDestroy () {
         foreach (CollectionGoal goal in collectionGoals) {
-            DestroyImmediate(goal);
+            if (goal && goal.gameObject) {
+                DestroyImmediate(goal.gameObject);
+            }
         }
     }
 
