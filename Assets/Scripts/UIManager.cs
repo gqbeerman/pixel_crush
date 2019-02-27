@@ -25,6 +25,27 @@ public class UIManager : Singleton<UIManager> {
         }
     }
 
+    public void SetupCollectionGoalLayout(CollectionGoal[] collectionGoals, GameObject goalLayout, int spacingWidth) {
+        if(goalLayout != null && collectionGoals != null && collectionGoals.Length != 0) {
+            RectTransform rectXform = goalLayout.GetComponent<RectTransform>();
+            rectXform.sizeDelta = new Vector2(collectionGoals.Length * spacingWidth, rectXform.sizeDelta.y);
+
+            CollectionGoalPanel[] panels = goalLayout.GetComponentsInChildren<CollectionGoalPanel>(true);
+
+            Debug.Log("we here");
+            for (int i = 0; i < panels.Length; i++) {
+                if(i < collectionGoals.Length && collectionGoals[i] != null) {
+                    panels[i].gameObject.SetActive(true);
+                    panels[i].collectionGoal = collectionGoals[i];
+                    Debug.Log(panels[i].collectionGoal.name + " collection goal");
+                    panels[i].SetupPanel();
+                } else {
+                    panels[i].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
     public void EnableTimer(bool state) {
         if(timer != null) {
             timer.gameObject.SetActive(state);

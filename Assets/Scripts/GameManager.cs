@@ -16,12 +16,18 @@ public class GameManager : Singleton<GameManager> {
     bool m_isReadyToReload = false;
 
     LevelGoal m_levelGoal;
+    LevelGoalCollected m_levelGoalCollected;
+    LevelGoalTimed m_levelGoalTimed;
+    LevelGoalScored m_levelGoalScored;
 
     public LevelGoal LevelGoal { get { return m_levelGoal; } }
 
     public override void Awake() {
         base.Awake();
         m_levelGoal = GetComponent<LevelGoal>();
+        m_levelGoalTimed = GetComponent<LevelGoalTimed>();
+        m_levelGoalCollected = GetComponent<LevelGoalCollected>();
+        m_levelGoalScored = GetComponent<LevelGoalScored>();
 
         //cache reference to goal
         m_board = FindObjectOfType<Board>().GetComponent<Board>();
@@ -42,7 +48,7 @@ public class GameManager : Singleton<GameManager> {
                 UIManager.Instance.levelNameText.text = scene.name;
             }
 
-            if (UIManager.Instance.movesLeftText && m_levelGoal is LevelGoalTimed) {
+            if (UIManager.Instance.movesLeftText && m_levelGoalTimed) {
                 UIManager.Instance.movesLeftText.fontSize = 70;
             }
             bool useTimer = m_levelGoal is LevelGoalTimed;
@@ -80,6 +86,23 @@ public class GameManager : Singleton<GameManager> {
             UIManager.Instance.messageWindow.GetComponent<RectXFormMover>().MoveOn();
             int maxGoal = m_levelGoal.scoreGoals.Length - 1;
             UIManager.Instance.messageWindow.ShowScoreMessage(LevelGoal.goalsText);
+
+            if(m_levelGoalTimed) {
+                UIManager.Instance.messageWindow.ShowTimeGoal(m_levelGoalTimed.timeLeft); //(((LevelGoalTimed)m_levelGoal).timeLeft);
+            } else {
+                UIManager.Instance.messageWindow.ShowMovesGoal(m_levelGoal.movesLeft);
+            }
+
+            if(m_levelGoalCollected != null) {
+                UIManager.Instance.messageWindow.ShowCollectionGoal(true);
+                GameObject goalLayout = UIManager.Instance.messageWindow.collectionGoalLayout;
+
+                if(goalLayout != null) {
+                    UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals, goalLayout, 80);
+                }
+            } else {
+                UIManager.Instance.messageWindow.ShowCollectionGoal(false);
+            }
         }
         while (!m_isReadyToBegin) {
             yield return null;
@@ -96,8 +119,8 @@ public class GameManager : Singleton<GameManager> {
     }
 
     IEnumerator PlayGameRoutine() {
-        if(m_levelGoal is LevelGoalTimed) {
-            (m_levelGoal as LevelGoalTimed).StartCountdown();
+        if(m_levelGoalTimed) {
+            m_levelGoalTimed.StartCountdown(); //(m_levelGoal as LevelGoalTimed).StartCountdown();
         }
         //while the end game condition is not true, keep playing
         //keep waiting a frame and check game condition
@@ -190,14 +213,14 @@ public class GameManager : Singleton<GameManager> {
     }
 
     public void AddTime(int timeValue) {
-        if(m_levelGoal is LevelGoalTimed) {
-            (m_levelGoal as LevelGoalTimed).AddTime(timeValue);
+        if(m_levelGoalTimed) {
+            m_levelGoalTimed.AddTime(timeValue); //(m_levelGoal as LevelGoalTimed).AddTime(timeValue);
         }
     }
 
     public void UpdateCollectionGoals(GamePiece pieceToCheck) {
-        if(m_levelGoal is LevelGoalCollected) {
-            (m_levelGoal as LevelGoalCollected).UpdateGoals(pieceToCheck);
+        if(m_levelGoalCollected) {
+            m_levelGoalCollected.UpdateGoals(pieceToCheck); //(m_levelGoal as LevelGoalCollected).UpdateGoals(pieceToCheck);
         }
     }
 }
