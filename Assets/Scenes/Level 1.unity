@@ -20031,7 +20031,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ec27021046034d0fbf0a37b192461a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreStars: 0
   scoreGoals: e8030000d0070000ac0d0000
   movesLeft: 30
   collectionGoals:
@@ -46626,6 +46625,7 @@ GameObject:
   - component: {fileID: 2040066776}
   - component: {fileID: 2040066778}
   - component: {fileID: 2040066777}
+  - component: {fileID: 2040066779}
   m_Layer: 5
   m_Name: Top Panel
   m_TagString: Untagged
@@ -46692,6 +46692,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2040066775}
   m_CullTransparentMesh: 0
+--- !u!114 &2040066779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040066775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a586cc15e38f74243bb61817a20139ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2040594738
 GameObject:
   m_ObjectHideFlags: 0

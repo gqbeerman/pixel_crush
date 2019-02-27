@@ -21701,6 +21701,7 @@ GameObject:
   - component: {fileID: 1187790850}
   - component: {fileID: 1187790852}
   - component: {fileID: 1187790851}
+  - component: {fileID: 1187790853}
   m_Layer: 5
   m_Name: Top Panel
   m_TagString: Untagged
@@ -21767,6 +21768,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1187790849}
   m_CullTransparentMesh: 0
+--- !u!114 &1187790853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187790849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a586cc15e38f74243bb61817a20139ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1249127510
 GameObject:
   m_ObjectHideFlags: 0
@@ -41811,7 +41824,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c42fe8b28cf34b06905d6b4c5bd4a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreStars: 0
   scoreGoals: 10270000204e000030750000
   movesLeft: 30
 --- !u!4 &1588000046

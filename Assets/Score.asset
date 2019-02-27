@@ -13,11 +13,123 @@ MonoBehaviour:
   m_Name: Score
   m_EditorClassIdentifier: 
   boardSettings:
-    starters: []
-    starterTiles: []
+    starters:
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 1750802255265453740, guid: 37b4f791b89d346069d337cb93936771, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    starterTiles:
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 4890273610810747452, guid: 53357aaebc52f49d18207fe12f1e8b72, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - rowData:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 6383356757997962316, guid: 95dc8f9f6eb8e45548a28c16b9ea32ca, type: 3}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
   scoreGoal:
-    scoreGoals: 
-    movesLeft: 0
+    scoreGoals: 10270000204e000030750000
+    movesLeft: 30
   timedGoal:
     scoreGoals: 
     movesLeft: 0
@@ -27,6 +139,6 @@ MonoBehaviour:
     movesLeft: 0
     goalPrefabs: []
     goalQuantities: 
-  scoreEnabled: 0
+  scoreEnabled: 1
   timedEnabled: 0
   collectedEnabled: 0
