@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 8278300890453960097}
   - component: {fileID: 8278300890453960108}
   m_Layer: 5
-  m_Name: Collection Goal Panel 1
+  m_Name: Collection Goal Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,8 +25,6 @@ public class LevelGoalScored : LevelGoal {
         if(ScoreManager.Instance.CurrentScore >= maxScore) {
             return true;
         }
-
         return (movesLeft == 0);
     }
-
 }
