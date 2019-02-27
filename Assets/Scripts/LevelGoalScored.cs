@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelGoalScored : LevelGoal {
 
-    public override string goalsText { get { return "Score at least\n" + scoreGoals[0].ToString(); } }
+    public override string goalsText { get { return "Score at least " + scoreGoals[0].ToString(); } }
 
     override public LevelGoalData ForSave () {
         return BaseForSave(new LevelGoalData());
