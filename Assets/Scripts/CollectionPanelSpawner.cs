@@ -25,5 +25,6 @@ public class CollectionPanelSpawner : MonoBehaviour
                 children[i].collectionGoal = goal.collectionGoals[i];
             }
         }
+        goal.uiPanels = children;
     }
 }
