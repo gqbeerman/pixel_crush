@@ -9,10 +9,10 @@ public class CollectionPanelSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CollectionGoalPanel[] children = GetComponentsInChildren<CollectionGoalPanel>();
+        CollectionGoalPanel[] children = GetComponentsInChildren<CollectionGoalPanel>(true);
         int i;
         for (i = 0; i < children.Length; i++) { // clean up any extras
-            DestroyImmediate(children[i]);
+            DestroyImmediate(children[i].gameObject);
         }
 
         LevelGoalCollected goal = GameManager.Instance.LevelGoal as LevelGoalCollected;
