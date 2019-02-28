@@ -37,7 +37,7 @@ public class UIManager : Singleton<UIManager> {
                 if(i < collectionGoals.Length && collectionGoals[i] != null) {
                     panels[i].gameObject.SetActive(true);
                     panels[i].collectionGoal = collectionGoals[i];
-                    Debug.Log(panels[i].collectionGoal.name + " collection goal");
+                    //Debug.Log(panels[i].collectionGoal.prefabToCollect + " collection goal");
                     panels[i].SetupPanel();
                 } else {
                     panels[i].gameObject.SetActive(false);

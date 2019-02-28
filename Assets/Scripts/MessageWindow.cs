@@ -16,6 +16,9 @@ public class MessageWindow : MonoBehaviour {
     public Sprite timerIcon;
     public Sprite movesIcon;
 
+    public Sprite goalCompleteIcon;
+    public Sprite goalFailIcon;
+
     public Image goalImage;
     public Text goalText;
 
@@ -48,23 +51,46 @@ public class MessageWindow : MonoBehaviour {
     }
 
     public void ShowGoal(string caption = "", Sprite icon = null) {
-        if(goalText != null && caption != "") {
-            goalText.text = caption;
+        if(caption != "") {
+            ShowGoalCaption(caption);
         }
 
-        if(goalImage != null && icon != null) {
+        if(icon != null) {
+            ShowGoalImage(icon);
+        }
+    }
+
+    public void ShowGoalCaption(string caption = "", int offsetX = 0, int offsetY = 0) {
+        if(goalText != null) {
+            goalText.text = caption;
+            RectTransform rectTransform = goalText.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition += new Vector2(offsetX, offsetY);
+        }
+    }
+
+    public void ShowGoalImage(Sprite icon = null) {
+        if(goalImage != null) {
+            goalImage.gameObject.SetActive(true);
             goalImage.sprite = icon;
+        }
+
+        if(icon == null) {
+            goalImage.gameObject.SetActive(false);
         }
     }
 
     public void ShowTimeGoal (int time) {
         string caption = time.ToString() + " seconds";
-        ShowGoal(caption, timerIcon);
+        //ShowGoal(caption, timerIcon);
+        ShowGoalImage(timerIcon);
+        ShowGoalCaption(caption, 0, 35);
     }
 
-    public void ShowMovesGoal(int moves) {
+    public void ShowMovesGoal(int moves, int xOffset = 0, int yOffset = 0) {
         string caption = moves.ToString() + " moves";
-        ShowGoal(caption, movesIcon);
+        //ShowGoal(caption, movesIcon);
+        ShowGoalImage(movesIcon);
+        ShowGoalCaption(caption, xOffset, yOffset);
     }
 
     public void ShowCollectionGoal(bool state = true) {

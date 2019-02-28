@@ -27,7 +27,6 @@ public class GameManager : Singleton<GameManager> {
         m_levelGoal = GetComponent<LevelGoal>();
         m_levelGoalTimed = GetComponent<LevelGoalTimed>();
         m_levelGoalCollected = GetComponent<LevelGoalCollected>();
-        m_levelGoalScored = GetComponent<LevelGoalScored>();
 
         //cache reference to goal
         m_board = FindObjectOfType<Board>().GetComponent<Board>();
@@ -89,8 +88,10 @@ public class GameManager : Singleton<GameManager> {
 
             if(m_levelGoalTimed) {
                 UIManager.Instance.messageWindow.ShowTimeGoal(m_levelGoalTimed.timeLeft); //(((LevelGoalTimed)m_levelGoal).timeLeft);
+            } else if (m_levelGoalCollected) {
+                UIManager.Instance.messageWindow.ShowMovesGoal(m_levelGoal.movesLeft, 0, 0);
             } else {
-                UIManager.Instance.messageWindow.ShowMovesGoal(m_levelGoal.movesLeft);
+                UIManager.Instance.messageWindow.ShowMovesGoal(m_levelGoal.movesLeft, 0, 35);
             }
 
             if(m_levelGoalCollected != null) {
@@ -155,27 +156,9 @@ public class GameManager : Singleton<GameManager> {
         m_isReadyToReload = false;
 
         if (m_isWinner) {
-            //Debug.Log("YOU WIN");
-            if(UIManager.Instance.messageWindow != null && UIManager.Instance != null) {
-                UIManager.Instance.messageWindow.GetComponent<RectXFormMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowWinMessage();
-            }
-
-            //play win sound
-            if(SoundManager.Instance != null) {
-                SoundManager.Instance.PlayWinSound();
-            }
+            ShowWinScreen();
         } else {
-            //Debug.Log("YOU LOSE");
-            if (UIManager.Instance.messageWindow != null && UIManager.Instance != null) {
-                UIManager.Instance.messageWindow.GetComponent<RectXFormMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowLoseMessage();
-            }
-
-            //play lose sound
-            if (SoundManager.Instance != null) {
-                SoundManager.Instance.PlayLoseSound();
-            }
+            ShowLoseScreen();
         }
 
         yield return new WaitForSeconds(2f);
@@ -188,6 +171,60 @@ public class GameManager : Singleton<GameManager> {
         }
         //just reload for now
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void ShowLoseScreen() {
+        //Debug.Log("YOU LOSE");
+        if (UIManager.Instance.messageWindow != null && UIManager.Instance != null) {
+            UIManager.Instance.messageWindow.GetComponent<RectXFormMover>().MoveOn();
+            UIManager.Instance.messageWindow.ShowLoseMessage();
+            UIManager.Instance.messageWindow.ShowCollectionGoal(false);
+
+            if(UIManager.Instance.messageWindow.goalFailIcon != null) {
+                UIManager.Instance.messageWindow.ShowGoalImage(UIManager.Instance.messageWindow.goalFailIcon);
+            }
+
+            string caption = "";
+            if (m_levelGoalTimed) {
+                caption = "out of time!";
+            } else {
+                caption = "out of moves!";
+            }
+            UIManager.Instance.messageWindow.ShowGoalCaption(caption, 0, 35);
+        }
+
+        //play lose sound
+        if (SoundManager.Instance != null) {
+            SoundManager.Instance.PlayLoseSound();
+        }
+    }
+
+    void ShowWinScreen() {
+        //Debug.Log("YOU WIN");
+        if (UIManager.Instance.messageWindow != null && UIManager.Instance != null) {
+            UIManager.Instance.messageWindow.GetComponent<RectXFormMover>().MoveOn();
+            UIManager.Instance.messageWindow.ShowWinMessage();
+            UIManager.Instance.messageWindow.ShowCollectionGoal(false);
+
+            if(ScoreManager.Instance != null) {
+                string scoreString = "you scored\n" + ScoreManager.Instance.CurrentScore.ToString() + " points";
+                if (m_levelGoalCollected) {
+                    UIManager.Instance.messageWindow.ShowGoalCaption(scoreString, 0, 35);
+                } else {
+                    UIManager.Instance.messageWindow.ShowGoalCaption(scoreString, 0, 0);
+                }
+
+            }
+
+            if(UIManager.Instance.messageWindow.goalCompleteIcon != null) {
+                UIManager.Instance.messageWindow.ShowGoalImage(UIManager.Instance.messageWindow.goalCompleteIcon);
+            }
+        }
+
+        //play win sound
+        if (SoundManager.Instance != null) {
+            SoundManager.Instance.PlayWinSound();
+        }
     }
 
     public void ReloadScene() {

@@ -22,7 +22,7 @@ public class LevelGoalTimed : LevelGoal {
     override public string movesLeftText { get { return "\u221e"; } }
 
     override public string goalsText { get { 
-        return "Score at least " + scoreGoals[0].ToString() + " in under " + timeLeft.ToString() + "s"; 
+        return "minimum score\n" + scoreGoals[0].ToString() + " points";
     } }
 
     override public LevelGoalData ForSave () {
